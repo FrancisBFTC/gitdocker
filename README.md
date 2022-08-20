@@ -16,8 +16,12 @@ O executável de controle de versão leria todo o código-fonte procurando diret
 
 Antes de tudo, dê um Fork no Projeto e clone o repositório em sua máquina, crie uma nova branch seguindo o padrão de versões do gitdocker:
 
-** Criando uma branch --> **
+**Criando uma branch -->**
+
+<code>
 git checkout -b gitdocker-v0.0.x
+</code>
+<br><br>
 
 Obs.: 'x' deve ser um número acima da última versão criada do gitdocker. Se por exemplo o gitdocker está na versão v1.0.1, sabemos que sua branch deve ser v1.0.2 e assim por diante.
 
