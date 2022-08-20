@@ -28,3 +28,12 @@ Obs.: 'x' deve ser um número acima da última versão criada do gitdocker. Se p
 Nesta nova versão adicione suas funções, Exemplo: Um novo parâmetro da CLI e uma nova função, efetua os testes, tudo funcionando então dê o git push ao Github. Entre no meu repositório do Gitdocker na Branch Main e abra a sessão de Pull Request, crie uma nova Pull Request, escolha seu repositório atualizado e escreva um comentário dizendo quais foram as suas alterações.
 
 Com isto irei analisar o código e verificar se posso fazer o merge com a branch main.
+
+## Versões do Projeto
+
+Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
+
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.1"> Versão 0.0.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.2"> Versão 0.0.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.3"> Versão 0.0.3 </a>
+* <a href="#"> Versão 0.0.4 </a>
