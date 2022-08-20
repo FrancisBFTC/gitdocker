@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	
 	FILE *file;
 	if(argc > 1){
-		if(contains(argv[1], ".txt")){
+		if(contains(argv[1], ".json")){
 			if((file = fopen(argv[1], "r")) == NULL){
 				printf("\nErro em abrir o arquivo para leitura!\n");
 				return 1;	
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 			
 			fclose(file);
 		}else{
-			printf("\nO arquivo nao e um arquivo de texto!\n");
+			printf("\nO arquivo nao e um arquivo JSON!\n");
 		}
 		
 		
