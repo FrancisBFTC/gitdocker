@@ -1,39 +1,46 @@
+/*
+	Author: Wender Francis
+	GitDocker v0.0.3
+	
+	@branch gitdocker-v0.0.3
+	@commit Software de documentação e versionamento
+	@description Este software irá automatizar a documentação durante o desenvolvimento
+				e fornecer uma série de recursos pra integração com o GIT
+
+*/
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <string.h>
 
 using namespace std;
 
 bool contains(char*, string);
+void printJSONConfig();
+void showInfoHelp();
 
-
+//@description Adiciona 2 argumentos no MAIN
 int main(int argc, char** argv) {
 	
-	FILE *file;
 	if(argc > 1){
-		if(contains(argv[1], ".txt")){
-			if((file = fopen(argv[1], "r")) == NULL){
-				printf("\nErro em abrir o arquivo para leitura!\n");
-				return 1;	
-			}
-			
-			char line[1024];
-			printf("\nArquivo aberto com sucesso\n");
-			while(fgets(line, sizeof(line), file) != NULL){
-				printf("%s", line);
-			}
-			
-			
-			fclose(file);
-		}else{
-			printf("\nO arquivo nao e um arquivo de texto!\n");
+		if(strcmp(argv[1], "--config") == 0 || strcmp(argv[1], "-c") == 0){
+			printf("\nConfiguracao do --config\n");
+			/*
+				TODO: Ler configurações iniciais de um arquivo e salva isso,
+				onde estas configurações poderão ser informações para um README,
+				apontamento para arquivos onde tem comandos do gitdocker, etc...
+			*/
 		}
 		
+		if(strcmp(argv[1], "--show-config") == 0 || strcmp(argv[1], "-sc") == 0){
+			printJSONConfig();
+		}
 		
 	}else{
-		printf("O GitDocker espera ao menos 1 argumento");
+		showInfoHelp();
 	}
 	
 	return 0;
@@ -55,4 +62,30 @@ bool contains(char* first, string second)
      else
          return true;    
           
+}
+
+// @commit Função pra imprimir dados da config JSON
+void printJSONConfig(){
+		FILE *file;
+		if((file = fopen("configs/config.json", "r")) == NULL){
+			printf("\nErro em abrir o arquivo para leitura!\n");
+			return;	
+		}
+			
+		char line[1024];
+		
+		while(fgets(line, sizeof(line), file) != NULL){
+			printf("%s", line);
+		}
+			
+		fclose(file);	
+}
+
+// @commit Função para imprimir dados de ajuda
+void showInfoHelp(){
+	printf("\nGitDocker v0.0.3 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
+	printf("Software de Documentacao e versionamento automatizado\n");
+	printf("\nusage: gitdocker [--config <arquivo>] [--show-config] \n\n");
+	printf("--config | -c <arquivo> : Define codigo principal onde contem configuracoes iniciais\n");
+	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
 }
