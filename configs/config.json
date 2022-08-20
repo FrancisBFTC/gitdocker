@@ -1,0 +1,17 @@
+{
+    "RULES" : {
+        "max_min": "100",
+        "max_mid": "20",
+        "max_high": "none"
+    },
+    "EXTENSIONS":{
+        "lang_0":{
+            "exts": [".c", ".cpp", ".h"],
+            "comments": ["//", "/*", "*/"]
+        },
+        "lang_1":{
+            "exts": [".asm", ".inc"],
+            "comments": [";"]
+        }
+    }
+}

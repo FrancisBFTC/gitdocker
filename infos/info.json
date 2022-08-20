@@ -1,0 +1,15 @@
+{
+    "CONFIG":{
+        "version": "1.0.0",
+        "fullversion": "1.0.0.202208",
+        "builddate": "19082022",
+        "sha1": "********************",
+        "md5": "********************",
+        "description": "Meu software para Objetivo X",
+        "commits":{
+          
+          
+        },
+        "countcommits": "0"
+    }
+}
