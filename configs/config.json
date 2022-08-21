@@ -5,13 +5,19 @@
         "max_high": "none"
     },
     "EXTENSIONS":{
-        "lang_0":{
-            "exts": [".c", ".cpp", ".h"],
-            "comments": ["//", "/*", "*/"]
-        },
-        "lang_1":{
-            "exts": [".asm", ".inc"],
-            "comments": [";"]
-        }
+        "lang":[
+            {
+                "exts": [".c", ".cpp", ".h", ".js"],
+                "comments": ["//", "/*", "*/"]
+            },
+            {
+                "exts": [".asm", ".inc"],
+                "comments": [";", ";;"]
+            },
+            {
+                "exts": [".html"],
+                "comments": ["<!--", "-->"]
+            }
+        ]
     }
 }

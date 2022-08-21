@@ -3,7 +3,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include <iostream>
 #include <sstream>
 #include <string.h>
 #include <vector>
@@ -20,7 +19,7 @@ void configInterpreter(char*);
 void readTillComments(FILE*, char[ ], char*);
 
 bool reading = false;
-vector <string> array_file;
+//vector <string> array_file;
 
 // @description Converte um char* em String
 string returnString(char *str){
@@ -76,6 +75,8 @@ void showInfoHelp(){
 	printf("\nusage: gitdocker [--config <arquivo>] [--show-config] \n\n");
 	printf("--config | -c <arquivo> : Define codigo principal onde contem configuracoes iniciais\n");
 	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
+
+	
 }
 
 #endif
