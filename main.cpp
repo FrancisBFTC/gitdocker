@@ -8,22 +8,8 @@
 
 */
 
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <sstream>
-#include <string.h>
 
-using namespace std;
-
-bool contains(char*, string);
-void printJSONConfig();
-void showInfoHelp();
-void configInterpreter(char*);
-void readTillComments(FILE*, char[ ]);
-
-bool reading = false;
+#include "gitfuncs.h"
 
 //@description Adiciona 2 argumentos no MAIN
 int main(int argc, char** argv) {
@@ -32,14 +18,10 @@ int main(int argc, char** argv) {
 		if(strcmp(argv[1], "--config") == 0 || strcmp(argv[1], "-c") == 0){
 			printf("\nConfigurando Projeto:\n\n");
 			configInterpreter(argv[2]);
-			/*
-				TODO: Ler configurações iniciais de um arquivo e salva isso,
-				onde estas configurações poderão ser informações para um README,
-				apontamento para arquivos onde tem comandos do gitdocker, etc...
-			*/
 		}
 		
 		if(strcmp(argv[1], "--show-config") == 0 || strcmp(argv[1], "-sc") == 0){
+			printf("\nConfiguracoes Atuais:\n\n");
 			printJSONConfig();
 		}
 		
@@ -48,60 +30,6 @@ int main(int argc, char** argv) {
 	}
 	
 	return 0;
-}
-
-string returnString(char *str){
-	stringstream data1;
-	data1 << str;
-	return data1.str();
-}
-
-bool contains(char* first, string second)
-{
-	 int pos = 0;
-     pos = returnString(first).find(second);
-	 
-     if(pos == -1)
-         return false;
-     else
-         return true;    
-          
-}
-
-// @description Função que pega uma parte de uma String
-char *substring(char *dst, const char *src, size_t start, size_t end){
-    return strncpy(dst, src + start, end);
-}
-
-// @description Função que pega índice de uma String em outra String
-int indexOf(char *a, const char *str){
-	return strstr(a, str) - a;
-}
-
-// @description Função pra imprimir dados da config JSON
-void printJSONConfig(){
-		FILE *file;
-		if((file = fopen("configs/config.json", "r")) == NULL){
-			printf("\nErro em abrir o arquivo para leitura!\n");
-			return;	
-		}
-			
-		char line[1024];
-		
-		while(fgets(line, sizeof(line), file) != NULL){
-			printf("%s", line);
-		}
-			
-		fclose(file);	
-}
-
-// @description Função para imprimir dados de ajuda
-void showInfoHelp(){
-	printf("\nGitDocker v0.0.3 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
-	printf("Software de Documentacao e versionamento automatizado\n");
-	printf("\nusage: gitdocker [--config <arquivo>] [--show-config] \n\n");
-	printf("--config | -c <arquivo> : Define codigo principal onde contem configuracoes iniciais\n");
-	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
 }
 
 // @description Função pra configurar interpretador
@@ -114,7 +42,7 @@ void configInterpreter(char *source){
 			
 		char line[1024];
 		
-		readTillComments(file, line);
+		readTillComments(file, line, source);
 		
 		while(reading){
 			
@@ -135,21 +63,38 @@ void configInterpreter(char *source){
 					strFile[strlen(strFile)-1] = 0;
 					
 					printf("@path log: Registrando '%s' para leitura\n", strFile);
+					
+					array_file.push_back(strFile);
+					
 					free(strFile);
 				}
 				
+				if(contains(line, "@"))
+		
 				fgets(line, sizeof(line), file);
 			}
 			
 		}
 		
+		/*
+		for(int z=0; z < array_file.size(); z++) {
+			cout << array_file[z] << endl;	
+		}
+		*/
 		
-			
+		
 		fclose(file);	
 }
 
 // @description Leitura de linhas de um arquivo até determinado caractere
-void readTillComments(FILE *file, char *line){
+void readTillComments(FILE *file, char *line, char *source){
+	
+	char *ext = (char*) malloc(strlen(source));
+	substring(ext, source, indexOf(source, ".")+1, strlen(source));
+	FILE *jsonRead = fopen("configs/config.json", "r");
+	
+	// TODO: Procurar extensão no JSON e identificar símbolo de comentário
+	
 	reading = false;
 	while(!reading){
 		char *value = fgets(line, sizeof(line), file);
