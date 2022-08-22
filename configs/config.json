@@ -1,17 +1,23 @@
 {
     "RULES" : {
-        "max_min": "100",
-        "max_mid": "20",
-        "max_high": "none"
+        "max_major": "100",
+        "max_minor": "20",
+        "max_patch": "none"
     },
     "EXTENSIONS":{
-        "lang_0":{
-            "exts": [".c", ".cpp", ".h"],
-            "comments": ["//", "/*", "*/"]
-        },
-        "lang_1":{
-            "exts": [".asm", ".inc"],
-            "comments": [";"]
-        }
+        "lang":[
+            {
+                "exts": [".c", ".cpp", ".h", ".js"],
+                "comments": ["//", "/*", "*/"]
+            },
+            {
+                "exts": [".asm", ".inc"],
+                "comments": [";", ";;"]
+            },
+            {
+                "exts": [".html"],
+                "comments": ["<!--", "-->"]
+            }
+        ]
     }
 }

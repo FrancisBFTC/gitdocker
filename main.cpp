@@ -1,41 +1,37 @@
-/*
+/*   
 	Author: Wender Francis
-	GitDocker v0.0.3
+	GitDocker v0.1.0
 	
-	@branch gitdocker-v0.0.3
-	@commit Software de documentação e versionamento
-	@description Este software irá automatizar a documentação durante o desenvolvimento
-				e fornecer uma série de recursos pra integração com o GIT
+	@branch gitdocker-v0.1.0
+	@commit Software de documentaÃ§Ã£o e versionamento
+	@description Este software irÃ¡ automatizar a documentaÃ§Ã£o durante o desenvolvimento
+				e fornecer uma sÃ©rie de recursos pra integraÃ§Ã£o com o GIT
 
 */
 
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <sstream>
-#include <string.h>
 
-using namespace std;
+#include "gitfuncs.h"
 
-bool contains(char*, string);
-void printJSONConfig();
-void showInfoHelp();
 
 //@description Adiciona 2 argumentos no MAIN
 int main(int argc, char** argv) {
 	
+	color = GetStdHandle(STD_OUTPUT_HANDLE);
+	
 	if(argc > 1){
-		if(strcmp(argv[1], "--config") == 0 || strcmp(argv[1], "-c") == 0){
-			printf("\nConfiguracao do --config\n");
-			/*
-				TODO: Ler configurações iniciais de um arquivo e salva isso,
-				onde estas configurações poderão ser informações para um README,
-				apontamento para arquivos onde tem comandos do gitdocker, etc...
-			*/
+		if(strcmp(argv[1], "--init") == 0 || strcmp(argv[1], "-i") == 0){
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "\nInicializando Projeto...\n" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			
+			initProjectRead(argv[2]);
 		}
 		
 		if(strcmp(argv[1], "--show-config") == 0 || strcmp(argv[1], "-sc") == 0){
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "\nLendo Configuracoes...\n" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
 			printJSONConfig();
 		}
 		
@@ -44,48 +40,4 @@ int main(int argc, char** argv) {
 	}
 	
 	return 0;
-}
-
-string returnString(char *str){
-	stringstream data1;
-	data1 << str;
-	return data1.str();
-}
-
-bool contains(char* first, string second)
-{
-	 int pos = 0;
-     pos = returnString(first).find(second);
-	 
-     if(pos == -1)
-         return false;
-     else
-         return true;    
-          
-}
-
-// @commit Função pra imprimir dados da config JSON
-void printJSONConfig(){
-		FILE *file;
-		if((file = fopen("configs/config.json", "r")) == NULL){
-			printf("\nErro em abrir o arquivo para leitura!\n");
-			return;	
-		}
-			
-		char line[1024];
-		
-		while(fgets(line, sizeof(line), file) != NULL){
-			printf("%s", line);
-		}
-			
-		fclose(file);	
-}
-
-// @commit Função para imprimir dados de ajuda
-void showInfoHelp(){
-	printf("\nGitDocker v0.0.3 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
-	printf("Software de Documentacao e versionamento automatizado\n");
-	printf("\nusage: gitdocker [--config <arquivo>] [--show-config] \n\n");
-	printf("--config | -c <arquivo> : Define codigo principal onde contem configuracoes iniciais\n");
-	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
 }
