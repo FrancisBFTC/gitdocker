@@ -33,11 +33,10 @@ Antes de tudo certifique-se que você está na plataforma Windows pois atualment
  4. Na janela que abrir, clique em **Programas**
  5. Nos campos de textos do gcc e g++ adicione -std=c++11, ficando assim
 
-   `
+   <code>
     gcc -std=c++11
-    
     g++ -std=c++11
-   `
+   </code>
    
  6. Clique em OK.
 
