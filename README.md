@@ -9,6 +9,11 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
   * <a href="#param"> Parâmetros do GitDocker </a>
     * <a href="#param-init">  Parâmetro --init </a>
     * <a href="#param-show">  Parâmetro --show-config </a>
+  * <a href="#comm"> Exemplos de Comandos Interpretáveis</a>
+    * <a href="#comm-path"> Comando Path</a>
+
+  * <a href="#colab"> Colaborações </a>
+  * <a href="#ver"> Versões do Projeto </a>
 
 <a name="what"></a>
 ## O que é este sistema?
@@ -86,8 +91,18 @@ ou
 ``` 
  gitdocker -sc 
 ```
+<a name="comm"></a>
+## Exemplos de Comandos Interpretáveis
 
-## Para colaboradores
+; TODO: Descrição de comandos
+
+<a name="comm-path"></a>
+### Comando PATH
+
+; TODO: Descrição do PATH
+
+<a name="colab"></a>
+## Colaborações
 
 Antes de tudo, dê um Fork no Projeto e clone o repositório em sua máquina, crie uma nova branch seguindo o padrão de versões do gitdocker:
 
@@ -104,6 +119,7 @@ Nesta nova versão adicione suas funções, Exemplo: Um novo parâmetro da CLI e
 
 Com isto irei analisar o código e verificar se posso fazer o merge com a branch main.
 
+<a name="ver"></a>
 ## Versões do Projeto
 
 Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
