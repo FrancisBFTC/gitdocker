@@ -35,8 +35,10 @@ Antes de tudo certifique-se que você está na plataforma Windows pois atualment
 
    `
     gcc -std=c++11
+    
     g++ -std=c++11
    `
+   
  6. Clique em OK.
 
 Caso optar por executar o `Build.bat`, ignore estas etapas. Agora vamos configurar a dependência do GitDocker que é um json-parser. Usamos esta dependência no projeto pois a maior parte das configurações do GitDocker são feitos por arquivos JSON, como também o software gera/altera estes tipos de arquivos, para configurar é bem simples, primeiro clone em sua máquina usando o git o repositório json do nlohmann, desta forma:
