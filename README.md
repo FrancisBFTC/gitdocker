@@ -11,7 +11,6 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
     * <a href="#param-show">  Parâmetro --show-config </a>
   * <a href="#comm"> Exemplos de Comandos Interpretáveis</a>
     * <a href="#comm-path"> Comando Path</a>
-
   * <a href="#colab"> Colaborações </a>
   * <a href="#ver"> Versões do Projeto </a>
 
