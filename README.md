@@ -42,7 +42,9 @@ Antes de tudo certifique-se que você está na plataforma Windows pois atualment
 
 Caso optar por executar o `Build.bat`, ignore estas etapas. Agora vamos configurar a dependência do GitDocker que é um json-parser. Usamos esta dependência no projeto pois a maior parte das configurações do GitDocker são feitos por arquivos JSON, como também o software gera/altera estes tipos de arquivos, para configurar é bem simples, primeiro clone em sua máquina usando o git o repositório json do nlohmann, desta forma:
 
-```git clone https://github.com/nlohmann/json.git```
+```
+ git clone https://github.com/nlohmann/json.git
+```
 
 Após isto, entra na pasta `json` clonada do repositório e dentro dela entre na pasta `include`, copie a pasta `nlohmann/` e cole na sua pasta `include` do G++, que fica no diretório: `C:\Program Files (x86)\Dev-Cpp\MinGW64\include` ou `C:\Program Files\Dev-Cpp\MinGW64\include` e também dentro do diretório `C:\Program Files (x86)\Dev-Cpp\MinGW64\x86_64-w64-mingw32\include` ou `C:\Program Files\Dev-Cpp\MinGW64\x86_64-w64-mingw32\include`, isto claramente se você estiver instalado seu G++ junto com a IDE DevC++ que foi o meu caso, se não for, procure a pasta include do seu G++ e cole a pasta copiada.
 
@@ -58,11 +60,15 @@ O Gitdocker contém parâmetros para configurar o projeto, criar documentações
 
 Através do parâmetro --init ou -i é possível ler comandos iniciais em um arquivo de código-fonte principal. Dentro deste arquivo poderá ter qualquer comando processável pelo Gitdocker, tanto em comentários de linha como em comentários de blocos. A função do --init é inicializar as configurações pra um projeto, como: Definir commits e descriptions principais, gerar READMEs, definir quais arquivos do projeto serão interpretados e diversas outras coisas. Antes de qualquer processamento do gitdocker, é necessário executar primeiramente este parâmetro:
 
-``` gitdocker --init [arquivo.extensão] ```
+``` 
+ gitdocker --init [arquivo.extensão] 
+```
 
 ou
 
-``` gitdocker -i [arquivo.extensão] ```
+``` 
+ gitdocker -i [arquivo.extensão] 
+```
 
 _Nota : o argumento **[arquivo.extensão]** pode ser qualquer arquivo ou diretório completo onde **'arquivo'** é o nome do seu arquivo e **'.extensão'** é a extensão do seu arquivo, Exemplo: program.cpp_
 
@@ -71,11 +77,15 @@ _Nota : o argumento **[arquivo.extensão]** pode ser qualquer arquivo ou diretó
 
 O --show-config como o próprio nome diz, apresenta ao usuário informações de configurações JSON com um visual formatado. No diretório **'/configs'** existe um arquivo chamado `config.json`, neste arquivo pode ser configurado pelo usuário as regras de versões do seu projeto atual e novas extensões de linguagens de programação. No entanto este arquivo já contém extensões de algumas linguagens, que são identificadas pelo gitdocker para filtrar símbolos de comentários e processar os comandos, para visualizar estas configurações basta digitar:
 
-``` gitdocker --show-config ```
+``` 
+ gitdocker --show-config 
+```
 
 ou
 
-``` gitdocker -sc ```
+``` 
+ gitdocker -sc 
+```
 
 ## Para colaboradores
 
