@@ -1,33 +1,30 @@
-# gitdocker
+# GitDocker v0.1.0
 
-Este é um projeto dedicado criar documentações automáticas durante um desenvolvimento de softwares e ao mesmo tempo realizar comandos do git para versionamento de código.
+### bug fixes
 
-## O que é este sistema?
+Na atualização da versão 0.0.8 para 0.1.0 foram corrigidos bugs em relação ao comando path e são eles:
 
-É um sistema que terá geradores README automatizados, geradores de mensagens de commit e geradores de descrições de commit, tudo automaticamente. Todos os processos do git, do git push ao merge, serão uma sequência de tarefas automáticas que o programador fará diariamente, isso facilitará o processo de documentação do software. O programador se preocupará apenas em adicionar comentários de linha no código-fonte com comandos interpretáveis pelo aplicativo de controle de versão. A outra ideia que também facilitará é o processo de contagem de versões. A cada build que o programador fizer em seu sistema, o contador de versões poderá incrementar em um arquivo de versão todos os números que ele programou. Um exemplo: em pequenas modificações e correções de bugs, o último número será incrementado, mas o programador poderá configurar suas próprias regras de versão definindo limites numéricos de forma programada, ou definindo em tempo real quando o número da 2ª versão pode ser incrementado , e pode ser repensado nisso como um arquivo de configuração para interpretar comandos em comentários de linha.
+* O comando path em comentários de linha não eram lidos
+* Comentários após um comentário de bloco não eram processados
+* Comentários de blocos que eram fechados na mesma linha registrava no path a fechadura do bloco
+* Um comentário na linha final que não terminava com quebra de linha era ignorado
 
-Este aplicativo pode ser integrado em qualquer software de compilação ou sistema operacional. E o programador, enquanto desenvolve, pode criar a documentação de seu software, simultaneamente.
+### Funcionalidades/Alterações
 
-## Como funciona?
+* Todas as funções foram reunidas no header "gitfuncs.h"
+* O processamento do comando path é chamado por uma função
+* A função configInterpreter() foi alterada pra initProjectRead() e foi completamente refatorada
+* O parâmetro --config está deprecado, ao invés disso utilize --init
+* A função printJSONConfig() agora apresenta na tela dados JSON formatado de configurações
+* Com a função initProjectRead() agora é possível ler qualquer comentário de qualquer linguagem, desde que seja configurada no arquivo "config.json" (Atualmente possui 3 conjuntos de extensões e comentários)
+* Coloração de textos apresentados no CMD foram implementadas
+* Foram adicionados na pasta "examples" 5 arquivos de extensões diferentes para testar comando path
+* O comando path agora contém o parâmetro 'ALL' que define um booleano para permitir a leitura de todos os arquivos
 
-O executável de controle de versão leria todo o código-fonte procurando diretivas nos comentários, interpretaria e criaria arquivos de dados pré-formatados e JSONs para serem lidos por um ShellScript (ou código em C) enquanto o enviavam para o github. A princípio o aplicativo irá identificar a extensão da linguagem, fará uma comparação de um vetor enorme (ou estrutura JSON) para identificar a linguagem e descobrir qual símbolo é utilizado para comentários, após isso ele irá analisar todos os comentários, procurando tags de documentação, fazendo a interpretação e processamento necessário para documentação e controle de versão, tudo direto no próprio código-fonte, a partir de qualquer linguagem de programação. Assim este estará disponível e acessível a todos os tipos de programadores, contendo convenções que serão conhecidas e ensinadas através de tutoriais.
+### TODO in v0.1.1 & v0.1.2:
 
-## Para colaboradores
-
-Antes de tudo, dê um Fork no Projeto e clone o repositório em sua máquina, crie uma nova branch seguindo o padrão de versões do gitdocker:
-
-**Criando uma branch -->**
-
-<code>
-git checkout -b gitdocker-v0.0.x
-</code>
-<br><br>
-
-Obs.: 'x' deve ser um número acima da última versão criada do gitdocker. Se por exemplo o gitdocker está na versão v1.0.1, sabemos que sua branch deve ser v1.0.2 e assim por diante.
-
-Nesta nova versão adicione suas funções, Exemplo: Um novo parâmetro da CLI e uma nova função, efetua os testes, tudo funcionando então dê o git push ao Github. Entre no meu repositório do Gitdocker na Branch Main e abra a sessão de Pull Request, crie uma nova Pull Request, escolha seu repositório atualizado e escreva um comentário dizendo quais foram as suas alterações.
-
-Com isto irei analisar o código e verificar se posso fazer o merge com a branch main.
+* Criar parâmetro do comando path para ler todos os arquivos de extensões especificadas.
+* Testar leitura de arquivos das extensões especificadas/arquivos especificados pelo comando path
 
 ## Versões do Projeto
 
