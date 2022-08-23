@@ -108,19 +108,45 @@ Este comando atualmente possui 3 tipos de parâmetros:
 
 **Nota:** _O Parâmetro [all] irá ler todos os arquivos de um determinado diretório, este diretório pode ser configurado no arquivo config.json (Implementado a partir da versão 0.1.2). Neste diretório pode ficar apenas arquivos de código-fonte, evitando assim problemas e conflitos._
 
-### Registrando arquivos
+### 1. Registrando arquivos
 
 Vamos supor que você tenha um projeto numa pasta chamada **MyProject** e lá contém o arquivo **main.c** no diretório raiz e existem 2 arquivos na pasta **Includes**: O arquivo **data.h** e **datas.inc**. O seu projeto tem esta seguinte estrutura de pastas:
 
-<img src="" alt="Estrutura de pastas de MyProject">
+<img src="https://imgur.com/oLkyHGq.png" alt="Estrutura de pastas de MyProject">
 
 O main.c é o seu código-fonte principal que será compilado pra executável, o data.h e datas.inc são arquivos de cabeçalho de dados para serem incluídos o programa em C. Note que nós temos um novo arquivo que não mencionei - O **gitdock.cpp** (Aliás poderia ser de qualquer extensão desde que seja configurado no config.json, veja na seção ...). Este arquivo é recomendável ser adicionado no projeto pra não houver ambíguidades, pois é a partir dele que o GitDocker vai ler as configurações iniciais. 
 
 Neste arquivo **gitdock.cpp** vamos colocar o comando @path seguindo a imagem abaixo:
 
-<img src="" alt="Comando path no arquivo gitdock.cpp">
+<img src="https://imgur.com/HITsmdb.png" alt="Comando path no arquivo gitdock.cpp">
 
+Nesta linha diz que vamos registrar num objeto JSON interno do GitDocker o arquivo **main.c** e este arquivo posteriormente será processado. Poderemos também fazer da seguinte maneira:
 
+<img src="https://imgur.com/rxHQzH9.png" alt="3 Comandos path no arquivo gitdock.cpp">
+
+Perceba que agora nós temos 2 comentários de linha, cada qual com um comando @path lendo um arquivo diferente, ou seja, os arquivos **data.h** e **datas.inc**, especificando também a pasta onde eles estão (Includes). Abaixo dos comentários de linha existe o comentário de bloco usando o comando @path pro arquivo **main.c** e mais abaixo a declaração de 2 Funções em C. Esta imagem é pra demonstrar que não importa a forma que os comentários estão organizados, o comando @path será processado da mesma forma, mesmo inserindo espaços ou tabs entre o @path e o arquivo (Exceto no próprio arquivo, não utilize arquivos com espaços). A declaração de funções e outros códigos serão ignorados pelo GitDocker justamente porque ele só processa os comandos em comentários.
+
+No exemplo da 1ª imagem (Com 1 comando @path), agora vamos executar o GitDocker utilizando o parâmetro --init da seguinte maneira:
+
+```
+gitdocker --init gitdock.cpp
+```
+
+O --init vai inicializar o projeto lendo o arquivo gitdock.cpp, dentro dele vai ler o parâmetro do comando @path, que é o arquivo main.cpp e o resultado seria:
+
+<img src="https://imgur.com/N9yof38.png" alt="Strings de 1 Log do comando path no CMD">
+
+Mas no caso da 2ª imagem (Com 3 comandos @path), fazendo o mesmo procedimento que antes no terminal: `gitdocker --init gitdock.cpp`, teríamos este resultado:
+
+<img src="https://imgur.com/HvnswO8.png" alt="Strings de 3 Logs do comando path no CMD">
+
+Perceba que na 1ª imagem do terminal do VSCode nós temos uma mensagem de log do @path dizendo que está registrando o arquivo main.cpp e abaixo é apresentado um objeto JSON com o nome do arquivo especificado. Cada vez que é usado o comando @path, um novo índice é adicionado neste array JSON com um novo arquivo, é assim que funciona o registro de arquivos pelo GitDocker. Na 2ª imagem feito no próprio CMD, temos 3 logs do @path e 3 arquivos do objeto JSON do @path. Também temos outro índice do mesmo objeto chamado de "exts", que é um array json que inicialmente é nulo, como visto na tela (Falaremos sobre isso posteriormente).
+
+O que significa que, os arquivos que tiverem registrados neste objeto JSON, serão lidos pelo GitDocker e processados com outros comandos, descartando os arquivos que foram modificados lidos pela ferramenta git.
+
+### 2. Registrando TODOS os arquivos
+
+; TODO fazer descrições do parâmetro [all]
 
 <a name="colab"></a>
 ## Colaborações
