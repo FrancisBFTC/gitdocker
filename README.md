@@ -113,7 +113,7 @@ Este comando atualmente possui 3 tipos de parâmetros:
 
 Vamos supor que você tenha um projeto numa pasta chamada **MyProject** e lá contém o arquivo **main.c** no diretório raiz e existem 2 arquivos na pasta **Includes**: O arquivo **data.h** e **datas.inc**. O seu projeto tem esta seguinte estrutura de pastas:
 
-<img src="https://imgur.com/oLkyHGq.png" alt="Estrutura de pastas de MyProject">
+<img src="https://imgur.com/OR1IOTy.png" alt="Estrutura de pastas de MyProject">
 
 O main.c é o seu código-fonte principal que será compilado pra executável, o data.h e datas.inc são arquivos de cabeçalho de dados para serem incluídos o programa em C. Note que nós temos um novo arquivo que não mencionei - O **gitdock.cpp** (Aliás poderia ser de qualquer extensão desde que seja configurado no config.json, veja na seção ...). Este arquivo é recomendável ser adicionado no projeto pra não houver ambíguidades, pois é a partir dele que o GitDocker vai ler as configurações iniciais. 
 
@@ -172,7 +172,29 @@ Quando utilizamos mais de uma linha do comando @path que contém o parâmetro `[
 
 ### 3. Registrando todos os arquivos de extensões específicas
 
+O parâmetro `[all]` também pode receber valores entre as chaves, porém é preciso adicionar **:** (dois pontos) após o nome do parâmetro, Exemplo: `[all: ...]`; No lugar das reticências é inserido nomes de extensões separados por vírgulas, no qual estes nomes devem ter o **pontinho** antes da extensão, Exemplo: 
 
+`[all: .ex1, .ex2, .ex3]`
+
+O GitDocker cria um vetor com todas estas extensões e armazena em um array de um objeto JSON - o objeto **paths**. No **paths** podem ser armazenados tantos os arquivos do comando @path como visto anteriormente, como também **extensões de arquivos**, se for arquivos o nome do array onde é armazenado é o **path** e se for extensões o nome do array onde é armazenado é o **ext**, então vamos a um exemplo:
+
+<img src="https://imgur.com/mC1wVnc.png" alt="Utilizando [all: ...] para armazenar extensões">
+
+E abaixo veremos o resultado deste parâmetro:
+
+<img src="https://imgur.com/RmHBshR.png" alt="Resultado do [all: ...] para armazenar extensões">
+
+Como pode ver acima o log do @path mostra que foi registrado 3 extensões para leitura, a mesma quantidade que foi especificada após o `[all:]` e o array JSON **exts** contém as extensões que foram definidas, já o array JSON **paths** é nulo, porque não foi registrado nenhum arquivo. Neste exemplo, o GitDocker procura no diretório e ler todos os arquivos que contem a extensão **.h** ou **.cpp** ou **.c**, ignorando todos os outros.
+
+Digamos que você queira ler um arquivo específico, que será uma espécie de **excessão**, onde a extensão deste arquivo não foi definida no array, poderá fazer da seguinte forma:
+
+<img src="https://imgur.com/rcLRLWK.png" alt="Registrando 1 arquivo e outras extensões com [all: ...]">
+
+E no resultado abaixo você pode ver que temos 2 arrays JSON preenchidos - o **paths** e o **exts**:
+
+<img src="https://imgur.com/bD9hEx5.png" alt="Resultado do Registro anterior">
+
+Então o arquivo que estiver no array **paths** será uma excessão, onde o GitDocker vai ler apenas este arquivo com data extensão, após finalizar a leitura, vai procurar todos os arquivos que contém uma das extensões definidas no array **exts**. Para isto ser possível, uma variável booleana é definida pra avisar o GitDocker que extensões serão lidas, pois o método de leitura de um arquivo definido com extensões definidas são diferentes.
 
 <a name="colab"></a>
 ## Colaborações
