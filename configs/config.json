@@ -12,7 +12,7 @@
             },
             {
                 "exts": [".asm", ".inc"],
-                "comments": [";", ";;"]
+                "comments": [";"]
             },
             {
                 "exts": [".html"],

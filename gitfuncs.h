@@ -1,8 +1,8 @@
 /*   
 	Author: Wender Francis
-	GitDocker v0.1.0
+	GitDocker v0.1.1
 	
-	@branch gitdocker-v0.1.0
+	@branch gitdocker-v0.1.1
 	@commit Software de documentação e versionamento
 	@description Este software irá automatizar a documentação durante o desenvolvimento
 				e fornecer uma série de recursos pra integração com o GIT
@@ -12,6 +12,7 @@
 
 #ifndef __GITFUNCS_H__
 
+// Inclusões de Bibliotecas de C e C++
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,14 +21,17 @@
 #include <vector>
 #include <windows.h>
 #include <fstream>
-#include <ctype.h>
 
+// Inclusões de Bibliotecas adicionais
 #include <nlohmann/json.hpp>
 
+// Importando NameSpaces
 using namespace std;
 using json = nlohmann::json;
 
-string returnString(char*);
+// Declaração de Funções
+string toString(char*);
+void toChar(string, char*);
 char *substring(char*, const char*, size_t, size_t);
 int indexOf(char*, const char*);
 bool contains(char*, string);
@@ -35,23 +39,31 @@ void printJSONConfig();
 void showInfoHelp();
 void initProjectRead(char*);
 
+// Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
 
-HANDLE color;
-
+// Variáveis Booleanas para comandos e leitura
 bool reading = false;
 bool all_path = false;
-int count_path = 0;
+bool all_ext = false;
 
+// Variáveis inteiras para contadores
+int count_path = 0;
+int count_ext = 0;
+
+// Objetos JSON
 json config;
 json paths;
 
+// Variáveis Strings
 string line_comment;
 string start_comment;
 string end_comment;
 
+// Variáveis do Windows
+HANDLE color;
 
-
+// Definições de Cores para o HANDLE
 #define DARK_BLUE		1
 #define DARK_GREEN		2
 #define DARK_CYAN		3
@@ -68,48 +80,46 @@ string end_comment;
 #define LIGHT_YELLOW	14
 #define LIGHT_WHITE		15
 
-//vector <string> array_file;
 
 // @description Converte um char* em String
-string returnString(char *str){
+string toString(char *str)
+{
 	stringstream data1;
 	data1 << str;
 	return data1.str();
 }
 
 // @description Converte uma String em char*
-char *returnChar(string str){
-	char *value;
-	for(int i = 0; i < str.length(); i++){
+void toChar(string str, char *value)
+{
+	int i;
+	for(i = 0; i < str.length(); i++)
 		value[i] = str[i];
-	}
+
+	value[i] = 0;
 }
 
 // @description função que verifica se uma String contém outra
 bool contains(char* first, string second)
 {
-	 int pos = 0;
-     pos = returnString(first).find(second);
-	 
-     if(pos == -1)
-         return false;
-     else
-         return true;    
-          
+	return (toString(first).find(second) == -1) ? false : true;         
 }
 
 // @description Função que pega uma parte de uma String
-char *substring(char *dst, const char *src, size_t start, size_t end){
+char *substring(char *dst, const char *src, size_t start, size_t end)
+{
     return strncpy(dst, src + start, end);
 }
 
 // @description Função que pega índice de uma String em outra String
-int indexOf(char *a, const char *str){
+int indexOf(char *a, const char *str)
+{
 	return strstr(a, str) - a;
 }
 
-// @description Remove espaços de uma String
-char * trim( char * in ){
+// @description Remove espaços e tabs de uma String
+char * trim( char * in )
+{
     char * p = in;
 	char * out;
     int i = 0;
@@ -173,7 +183,7 @@ void showInfoHelp(){
 	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
 }
 
-// @description Função pra configurar interpretador
+// @description Função pra iniciar projeto
 void initProjectRead(char *source){
 		FILE *file;
 		if((file = fopen(source, "r")) == NULL){
@@ -184,8 +194,6 @@ void initProjectRead(char *source){
 		}
 			
 		char line[1024];
-		
-		//readTillComments(file, line, source);
 
 		char *ext = (char*) malloc(strlen(source));
 		substring(ext, source, indexOf(source, "."), strlen(source));
@@ -206,7 +214,7 @@ void initProjectRead(char *source){
 						case 1:
 							line_comment = extension["comments"][0];
 							start_comment = extension["comments"][0];
-							end_comment = extension["comments"][0];
+							end_comment = "";
 							break;
 						case 2:
 							line_comment = extension["comments"][0];
@@ -220,10 +228,8 @@ void initProjectRead(char *source){
 							break;
 					}
 					break;
-					//std::cout << "Lang. " << i << ": " << extension["exts"][j] << endl;
 				}
 			}
-			//std::cout << "Lang. " << i << ": " << extension << endl;
 		}
 		
 		
@@ -241,10 +247,10 @@ void initProjectRead(char *source){
 		}
 
 		SetConsoleTextAttribute(color, LIGHT_GREEN);
-		std::cout << "\nPaths Obj:" << paths << endl;
+		std::cout << "\nPaths Obj:" << paths["paths"] << endl;
+		SetConsoleTextAttribute(color, LIGHT_RED);
+		std::cout << "Exts Obj:" << paths["exts"] << endl;
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
-		
-		//std::cout << "\nValores Lidos:\n\n" << config << endl;
 			
 		std::fclose(file);	
 }
@@ -268,38 +274,73 @@ void pathCommand(char *line){
 		strFile[strlen(strFile)-1] = 0;
 
 	strFile = trim(strFile);
-							
-	if(strcmp(strFile, "[all]") == 0){
-		if(!all_path){
-			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@path ";
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
-			std::cout << "log: ";
-			SetConsoleTextAttribute(color, DARK_YELLOW);
-			std::cout << "TODOS ";
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
-			std::cout << "os arquivos serao lidos!" << endl;
-		}else{
-			SetConsoleTextAttribute(color, LIGHT_YELLOW);
-			std::cout << "Aviso: O parametro ALL ja foi definido!" << endl;
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+	if(contains(strFile, "[all:")){
+		string text = toString(strFile);
+    	vector<string> words;
+
+    	char dot_char = ',';
+    	stringstream sstream(text);
+    	string word;
+    	while (std::getline(sstream, word, dot_char)) {
+        	words.push_back(word);
+    	}
+
+		for(int j = 0; j < words.size(); j++){
+			if(words[j].find("[all:") != -1)
+				words[j].replace(words[j].find("[all:"), 5, "");
+
+			if(words[j].find("]") != -1)
+				words[j].replace(words[j].find("]"), 1, "");
+
+			paths["exts"][count_ext] = words[j];
+			count_ext++;
 		}
-		all_path = true;
-	}else{
+
 		SetConsoleTextAttribute(color, LIGHT_CYAN);
 		std::cout << "@path ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 		std::cout << "log: Registrando ";
 		SetConsoleTextAttribute(color, DARK_YELLOW);
-		std::cout << "'" << strFile << "' ";
+		std::cout << "'" << words.size() << " Extensoes' ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 		std::cout << "para leitura" << endl;
-								
-		//array_file.push_back(strFile);
-		paths["paths"][count_path] = strFile;
-								
-		std::free(strFile);
-		count_path++;
+
+		all_ext = true;
+		
+	}else{
+		if(strcmp(strFile, "[all]") == 0){
+			if(!all_path){
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@path ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ";
+				SetConsoleTextAttribute(color, DARK_YELLOW);
+				std::cout << "TODOS ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "os arquivos serao lidos!" << endl;
+			}else{
+				SetConsoleTextAttribute(color, LIGHT_YELLOW);
+				std::cout << "Aviso: O parametro ALL ja foi definido!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}
+			all_path = true;
+		}else{
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@path ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: Registrando ";
+			SetConsoleTextAttribute(color, DARK_YELLOW);
+			std::cout << "'" << strFile << "' ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "para leitura" << endl;
+									
+			//array_file.push_back(strFile);
+			paths["paths"][count_path] = strFile;
+									
+			std::free(strFile);
+			count_path++;
+		}		
 	}
 }
 
