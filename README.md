@@ -145,7 +145,7 @@ Perceba que na 1ª imagem do terminal do VSCode nós temos uma mensagem de log d
 
 O que significa que, os arquivos que tiverem registrados neste objeto JSON, serão lidos pelo GitDocker e processados com outros comandos, descartando os arquivos que foram modificados lidos pela ferramenta git.
 
-### 2. Registrando TODOS os arquivos
+### 2. Lendo TODOS os arquivos
 
 Para registrar todos os arquivos existentes no projeto, é preciso especificar o parâmetro `[all]` após o comando @path. Quando o GitDocker identificar este parâmetro, ele apresenta uma mensagem na tela e define um booleano como **true**, desta forma, as outras linhas que contém o @path serão ignorados e apenas considerado aquele que tem o parâmetro `[all]`, veja abaixo como é utilizado:
 
@@ -170,7 +170,7 @@ Quando utilizamos mais de uma linha do comando @path que contém o parâmetro `[
 
 <img src="https://imgur.com/oyIkxRJ.png" alt="Resultado no CMD com mais de 1 parâmetro [all]">
 
-### 3. Registrando todos os arquivos de extensões específicas
+### 3. Lendo todos os arquivos de extensões específicas
 
 O parâmetro `[all]` também pode receber valores entre as chaves, porém é preciso adicionar **:** (dois pontos) após o nome do parâmetro, Exemplo: `[all: ...]`; No lugar das reticências é inserido nomes de extensões separados por vírgulas, no qual estes nomes devem ter o **pontinho** antes da extensão, Exemplo: 
 
@@ -194,7 +194,21 @@ E no resultado abaixo você pode ver que temos 2 arrays JSON preenchidos - o **p
 
 <img src="https://imgur.com/bD9hEx5.png" alt="Resultado do Registro anterior">
 
-Então o arquivo que estiver no array **paths** será uma excessão, onde o GitDocker vai ler apenas este arquivo com data extensão, após finalizar a leitura, vai procurar todos os arquivos que contém uma das extensões definidas no array **exts**. Para isto ser possível, uma variável booleana é definida pra avisar o GitDocker que extensões serão lidas, pois o método de leitura de um arquivo definido com extensões definidas são diferentes.
+Então o arquivo que estiver no array **paths** será uma excessão, onde o GitDocker vai ler apenas este arquivo com dada extensão, após finalizar a leitura, vai procurar todos os arquivos que contém uma das extensões definidas no array **exts**. Para isto ser possível, uma variável booleana é definida pra avisar o GitDocker que extensões serão lidas, pois o método de leitura de um arquivo definido com extensões definidas são diferentes.
+
+Você também pode dividir um conjuntos de extensões em linhas separadas pelo comando @path e armazenar todas as extensões em um mesmo array JSON, da seguinte forma:
+
+```
+/*
+  @path [all: .html, .css, .js]
+  @path [all: .php, .py]
+  @path [all: .cs, .cpp, .c, .h]
+*/
+```
+
+E terá o seguinte resultado:
+
+<img src="https://imgur.com/Pu6XeU1.png" alt="Leitura de vários conjuntos de extensões">
 
 <a name="colab"></a>
 ## Colaborações
