@@ -93,12 +93,34 @@ ou
 <a name="comm"></a>
 ## Exemplos de Comandos Interpretáveis
 
-; TODO: Descrição de comandos
+Os comandos interpretáveis são palavras-chaves escritas em comentários de código-fonte no qual o executável GitDocker irá ler e processar uma determinada tarefa. Todos os comandos tem um prefixo @ antes da palavra-chave e podem ser precedidos de um ou mais parâmetros ou nenhum parâmetro. Cada comando no GitDocker tem sua própria tarefa, efetuando ações desde a documentação de projeto personalizado até o versionamento de código automatizado com a utilização da ferramenta git, no entanto é necessário ler um arquivo inicial através do parâmetro de linha de comando --init, que irá ler e processar todos os comandos digitados no arquivo. Abaixo vamos as descrições e exemplos dos comandos disponíveis. 
 
 <a name="comm-path"></a>
 ### Comando PATH
 
-; TODO: Descrição do PATH
+O comando @path serve pra registrar arquivos ou diretórios em um objeto JSON. Os dados são armazenados neste objeto para serem lidos posteriormente. A função do comando @path é registrar para o GitDocker saber quais arquivos ele deve processar dentro de um projeto, lendo os diversos comandos de commit, descriptions e outros em arquivos de código-fonte. No entanto, o comando @path pode ser omitido e a partir daí o GitDocker vai considerar apenas os arquivos que foram modificados ou adicionados no projeto. O grande problema disso, é que existem milhares de tipos de arquivos possíveis em diversos projetos onde não existe um código-fonte, como Exemplo: Um executável, uma imagem, um vídeo, etc.. e mesmo descartando esta lista, ainda existem arquivos que contém dados e DSLs (Uma linguagem de domínio específico) que não possuem blocos de comentários e que após modificados, o GitDocker tentará ler mas não encontrará nada, perdendo um bom tempo de processamento, ainda mais se o projeto for muito grande. Então pra resolver este problema, entra o comando @path. 
+
+Este comando atualmente possui 3 tipos de parâmetros:
+
+    1. O nome de um arquivo ou diretório.
+    2. Parâmetro [all] que especifica todos os arquivos.
+    3. Parâmetro [all: ...] onde as reticências são extensões de arquivos separados por vírgula.
+
+**Nota:** _O Parâmetro [all] irá ler todos os arquivos de um determinado diretório, este diretório pode ser configurado no arquivo config.json (Implementado a partir da versão 0.1.2). Neste diretório pode ficar apenas arquivos de código-fonte, evitando assim problemas e conflitos._
+
+### Registrando arquivos
+
+Vamos supor que você tenha um projeto numa pasta chamada **MyProject** e lá contém o arquivo **main.c** no diretório raiz e existem 2 arquivos na pasta **Includes**: O arquivo **data.h** e **datas.inc**. O seu projeto tem esta seguinte estrutura de pastas:
+
+<img src="" alt="Estrutura de pastas de MyProject">
+
+O main.c é o seu código-fonte principal que será compilado pra executável, o data.h e datas.inc são arquivos de cabeçalho de dados para serem incluídos o programa em C. Note que nós temos um novo arquivo que não mencionei - O **gitdock.cpp** (Aliás poderia ser de qualquer extensão desde que seja configurado no config.json, veja na seção ...). Este arquivo é recomendável ser adicionado no projeto pra não houver ambíguidades, pois é a partir dele que o GitDocker vai ler as configurações iniciais. 
+
+Neste arquivo **gitdock.cpp** vamos colocar o comando @path seguindo a imagem abaixo:
+
+<img src="" alt="Comando path no arquivo gitdock.cpp">
+
+
 
 <a name="colab"></a>
 ## Colaborações
