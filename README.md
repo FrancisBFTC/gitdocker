@@ -147,7 +147,32 @@ O que significa que, os arquivos que tiverem registrados neste objeto JSON, ser�
 
 ### 2. Registrando TODOS os arquivos
 
-; TODO fazer descrições do parâmetro [all]
+Para registrar todos os arquivos existentes no projeto, é preciso especificar o parâmetro `[all]` após o comando @path. Quando o GitDocker identificar este parâmetro, ele apresenta uma mensagem na tela e define um booleano como **true**, desta forma, as outras linhas que contém o @path serão ignorados e apenas considerado aquele que tem o parâmetro `[all]`, veja abaixo como é utilizado:
+
+<img src="https://imgur.com/R3Tzaal.png" alt="Arquivo com o parâmetro [all]">
+
+Após inserir o comando no arquivo, agora digite `gitdocker --init gitdock.cpp` no Terminal e veja o resultado:
+
+<img src="https://imgur.com/GEEJRxA.png" alt="Resultado no CMD do parâmetro [all]">
+
+O parâmetro `[all]` não registra todos os arquivos porque como você pode ver, os objetos JSON são nulos, porém ele define como verdadeiro uma variável que vai permitir que o GitDocker leia todos os arquivos daquele projeto.
+
+**Nota:** _A partir da versão 0.1.3 será implementado o valor JSON **ignore** que especifica todas as extensões de arquivo que serão ignorados naquele projeto, como: .EXE, .OBJ, etc..._
+
+Quando utilizamos mais de uma linha do comando @path que contém o parâmetro `[all]`, na tela do terminal é apresentado um aviso, veja abaixo:
+
+```C
+ /*
+   @path [all]
+   @path [all]
+ */
+```
+
+<img src="https://imgur.com/oyIkxRJ.png" alt="Resultado no CMD com mais de 1 parâmetro [all]">
+
+### 3. Registrando todos os arquivos de extensões específicas
+
+
 
 <a name="colab"></a>
 ## Colaborações
