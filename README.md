@@ -214,7 +214,47 @@ E terá o seguinte resultado:
 <a name="comm-init"></a>
 ### Comando Init
 
-; TODO fazer descrição do comando Init
+O comando `@init` serve para inicializar as configurações impostas por comandos anteriores, por exemplo: Se você definiu arquivos a serem lidos pelo comando `@path`, o init irá ler cada um destes arquivos e processá-los; Se você definiu uma mensagem de commit global, o init irá processar este commit ou uma description digamos assim. Então o init de fato dá o arranque/setup nas configurações, então vamos supor que você criou um arquivo chamado **init.js** desta forma:
+
+<img src="https://imgur.com/mhw5bfL.png" alt="Arquivo init.js com 2 comandos path e 1 init">
+
+E logo em seguida você cria 2 arquivos: um chamado **home.js** e o outro chamado **index.js** na pasta **Includes**, cada um ficando da seguinte forma:
+
+#### Arquivo home.js
+<img src="https://imgur.com/AIuw1Vz.png" alt="Arquivo home.js com 2 comandos: branch e commit">
+
+#### Arquivo index.js
+<img src="https://imgur.com/at9NeyK.png" alt="Arquivo index.js com 1 comando branch">
+
+Os comandos branch e commit são ilustrativos apenas para testes (Serão implementados a partir da versão 0.1.4). Então após o path armazenar no seu objeto JSON os diretórios de arquivos, o init ficará encarregado de ler estes arquivos caso a variável **path_defined** for verdadeira e caso o objeto JSON **paths** for diferente de nulo. Após isto será chamada uma função de interpretação dos comandos, a mesma função que chamou o comando init e assim, os comandos que tiverem no **home.js** e **index.js** serão interpretados. Veja abaixo o resultado de log:
+
+<img src="https://imgur.com/fbbHZUE.png" alt="Tela de logs do comando path e init">
+
+Assim como apresenta na tela, os logs do comando path foram apresentados e após isto, os logs do comando init foram apresentados, onde cada processamento de arquivo pelo init é identificado 1 ou mais comandos, no qual é mostrado na tela a mensagem dos nomes dos comandos em ordem, porém esta mensagem foi programada temporariamente para testar o projeto, pois cada comando terá seu próprio log do que eles está fazendo.
+
+Outra situação é se você decide colocar a extensão de um dos arquivos do comando path para um arquivo inexistente, como exemplo **index.html**:
+
+<img src="https://imgur.com/rXxQnmQ.png" alt="Alterando a extensão para arquivo inexistente">
+
+Então você terá este resultado:
+
+<img src="https://imgur.com/lJ7gJ6u.png" alt="Resultado de arquivo inexistente">
+
+O comando path até registra o arquivo pois ele não sabe se aquele arquivo existe ou não, justamente porque ele não é responsável por processar o arquivo, apenas armazenar o seu nome, porém o init por tentar efetuar a leitura dos arquivos ele logo identifica que o arquivo definido no path não existe e já apresenta a mensagem de erro. Mas se você tentar ler um arquivo EXE desta forma:
+
+<img src="https://imgur.com/7x7WSEU.png" alt="Adicionando no path program.exe">
+
+Como alterando o home.js para **program.exe**, mesmo que este arquivo exista no diretório, o GitDocker dará um erro como este:
+
+<img src="https://imgur.com/N4xsWYc.png" alt="A extensão do EXE não é válida">
+
+Isto porque na versão v0.1.2 foi implementado um objeto **INIT** com o array **ignore**, no qual este objeto vai guardar algumas regras e configurações para o comando init e o path, como o próprio ignore que serve pra armazenar uma lista de extensões que serão ignoradas pelo GitDocker. Lembrando de um possível problema que foi citado nesta mesma documentação sobre ler arquivos que **não** são códigos-fontes, isto traria sérios conflitos pelo fato do GitDocker processar comentários em códigos-fontes. Atualmente na data que estou escrevendo esta documentação, na versão 0.1.2, o array JSON **ignore** possui 4 extensões: **.exe, .obj, .o, .dll**; que são arquivos binários não processáveis pelo GitDocker. Você mesmo poderá efetuar suas próprias modificações no JSON, inserindo mais extensões a serem bloqueadas. Da mesma forma que o parâmetro `[all]` poderá usufluir desta mesma funcionalidade.
+
+Abaixo mostrarei uma parte do arquivo **config.json** apresentando o objeto **INIT**:
+
+<img src="https://imgur.com/mQPv4pM.png" alt="Objeto INIT no arquivo config.json">
+
+**Nota: ** _Em outra sessões serão abordados mais a fundo sobre **Configurações no config.json**_
 
 <a name="colab"></a>
 ## Colaborações
