@@ -4,6 +4,9 @@
         "max_minor": "20",
         "max_patch": "none"
     },
+    "INIT" : {
+        "ignore": [".exe", ".obj", ".o", ".dll"]
+    },
     "EXTENSIONS":{
         "lang":[
             {

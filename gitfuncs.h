@@ -38,14 +38,17 @@ bool contains(char*, string);
 void printJSONConfig();
 void showInfoHelp();
 void initProjectRead(char*);
+void fileInterpreter(FILE*, bool);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
+void initCommand(char *);
 
 // Variáveis Booleanas para comandos e leitura
-bool reading = false;
+bool reading_init = false;
+bool reading_file = false;
 bool all_path = false;
-bool all_ext = false;
+bool path_defined = false;
 
 // Variáveis inteiras para contadores
 int count_path = 0;
@@ -192,8 +195,6 @@ void initProjectRead(char *source){
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			return;	
 		}
-			
-		char line[1024];
 
 		char *ext = (char*) malloc(strlen(source));
 		substring(ext, source, indexOf(source, "."), strlen(source));
@@ -233,18 +234,7 @@ void initProjectRead(char *source){
 		}
 		
 		
-		while((fgets(line, sizeof(line), file)) != NULL){
-			
-			reading = (contains(line, start_comment) || contains(line, line_comment)) ? true : reading;
-			
-			if(reading){
-				if(contains(line, "@path ")){
-					pathCommand(line);
-				}	
-
-			}	
-
-		}
+		fileInterpreter(file, true);
 
 		SetConsoleTextAttribute(color, LIGHT_GREEN);
 		std::cout << "\nPaths Obj:" << paths["paths"] << endl;
@@ -262,7 +252,7 @@ void pathCommand(char *line){
 						
 	if(contains(line, end_comment)){
 		substring(strFile, line, lengthCmd, strlen(line)-end_comment.length()-lengthCmd);
-		reading = false;
+		reading_init = false;
 	}else{
 		if(contains(line, "\n"))
 			substring(strFile, line, lengthCmd, indexOf(line, "\n"));
@@ -305,8 +295,6 @@ void pathCommand(char *line){
 		std::cout << "'" << words.size() << " Extensoes' ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 		std::cout << "para leitura" << endl;
-
-		all_ext = true;
 		
 	}else{
 		if(strcmp(strFile, "[all]") == 0){
@@ -342,6 +330,117 @@ void pathCommand(char *line){
 			count_path++;
 		}		
 	}
+}
+
+void initCommand(char *line){
+	// TODO: pegar parâmetro de tempo pela variável line
+
+	if(path_defined){
+		FILE *file_read;
+		if(all_path){
+
+		}else{
+			if(paths["paths"] != NULL){
+				
+				cout << endl;
+				for(int i = 0; i < paths["paths"].size(); i++){
+					string files = paths["paths"][i];
+					char *filesChar = (char*) malloc(files.length());
+					toChar(files, filesChar);
+
+					if((file_read = fopen(filesChar, "r")) == NULL){
+						SetConsoleTextAttribute(color, DARK_RED);
+						std::cout << "O arquivo '" << filesChar << "' definido no path nao existe!" << endl;
+						SetConsoleTextAttribute(color, LIGHT_WHITE);
+					}else{
+						bool ignore = false;
+						for(int j = 0; j < config["INIT"]["ignore"].size(); j++){
+							string ignore_ext = config["INIT"]["ignore"][j];
+							if(contains(filesChar, ignore_ext)){
+								ignore = true;
+								break;
+							}
+						}
+						
+						if(!ignore){
+							SetConsoleTextAttribute(color, LIGHT_CYAN);
+							std::cout << "@init ";
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							std::cout << "log: Processando arquivo ";
+							SetConsoleTextAttribute(color, DARK_YELLOW);
+							std::cout << "'" << filesChar << "' ";
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							std::cout << "..." << endl;
+
+							fileInterpreter(file_read, false);
+
+						}else{
+							SetConsoleTextAttribute(color, LIGHT_CYAN);
+							std::cout << "@init ";
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							std::cout << "log: ";
+							SetConsoleTextAttribute(color, LIGHT_RED);
+							std::cout << "o arquivo '" << filesChar << "' nao contem uma extensao valida!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+						}
+
+						
+					}
+					free(filesChar);
+				}
+			}
+
+			if(paths["exts"] != NULL){
+
+			}
+		}
+
+		fclose(file_read);
+	}
+
+}
+
+void fileInterpreter(FILE* file, bool is_read){
+	char line[1024];
+	while((fgets(line, sizeof(line), file)) != NULL){
+
+		if(is_read){
+			if(contains(line, end_comment)) reading_init = false;
+
+			reading_init = (contains(line, start_comment) || contains(line, line_comment)) ? true : reading_init;
+			is_read = reading_init;
+		}else{
+			if(contains(line, end_comment)) reading_file = false;
+
+			reading_file = (contains(line, start_comment) || contains(line, line_comment)) ? true : reading_file;
+			is_read = reading_file;
+		}
+
+		
+		if(is_read){
+			if(contains(line, "@path ")){
+				pathCommand(line);
+				path_defined = true;
+			}
+			if(contains(line, "@init")){
+				initCommand(line);
+			}
+			if(contains(line, "@branch")){
+				//if(contains(line, end_comment))
+				//	reading_file = false;
+			
+				cout << "\tO comando @branch existe!" << endl;
+			}
+			if(contains(line, "@commit")){
+				//if(contains(line, end_comment))
+				//	reading_file = false;
+				
+				cout << "\tO comando @commit existe!" << endl;
+			}
+		}	
+
+	}
+
 }
 
 #endif
