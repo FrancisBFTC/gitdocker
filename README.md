@@ -24,3 +24,17 @@ Nenhum.
 2. Implementar na versão 0.1.3 a leitura de **todos** os arquivos de um dado diretório configurado no objeto JSON **INIT** inserido no comando `@path` a partir do comando `@init` (respeitando o array JSON **ignore** do mesmo objeto).
 3. Corrigir bug desta versão 0.1.2 para a versão 0.1.3 relacionado a leitura do nome `@path` em códigos que estão fora de comentários, isso surgiu devido as novas modificações onde arquivos são lidos de forma recursiva.
 4. Iniciar a implementação dos comandos `@commit` e `@description` na versão 0.1.4 na preparação de migração de versão de 0.1.4 para 0.2.0.
+
+## Versões do Projeto
+
+Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
+
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.1"> Versão 0.0.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.2"> Versão 0.0.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.3"> Versão 0.0.3 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.4"> Versão 0.0.4 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.8"> Versão 0.0.8 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.0"> Versão 0.1.0 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.1"> Versão 0.1.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.2"> Versão 0.1.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.3"> Versão 0.1.3 </a>
