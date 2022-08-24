@@ -12,6 +12,7 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
     * <a href="#param-show">  Parâmetro --show-config </a>
   * <a href="#comm"> Exemplos de Comandos Interpretáveis</a>
     * <a href="#comm-path"> Comando Path</a>
+    * <a href="#comm-init"> Comando Init</a>
   * <a href="#colab"> Colaborações </a>
   * <a href="#ver"> Versões do Projeto </a>
 
@@ -210,6 +211,11 @@ E terá o seguinte resultado:
 
 <img src="https://imgur.com/Pu6XeU1.png" alt="Leitura de vários conjuntos de extensões">
 
+<a name="comm-init"></a>
+### Comando Init
+
+; TODO fazer descrição do comando Init
+
 <a name="colab"></a>
 ## Colaborações
 
@@ -240,3 +246,5 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.8"> Versão 0.0.8 </a>
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.0"> Versão 0.1.0 </a>
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.1"> Versão 0.1.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.2"> Versão 0.1.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.3"> Versão 0.1.3 </a>
