@@ -254,7 +254,7 @@ Abaixo mostrarei uma parte do arquivo **config.json** apresentando o objeto **IN
 
 <img src="https://imgur.com/mQPv4pM.png" alt="Objeto INIT no arquivo config.json">
 
-**Nota:**  _Em outra sessões serão abordados mais a fundo sobre **Configurações no config.json**_
+**Nota:**  _Em outras sessões serão abordados mais a fundo sobre **Configurações no config.json**_
 
 <a name="colab"></a>
 ## Colaborações
