@@ -21,6 +21,8 @@
 #include <vector>
 #include <windows.h>
 #include <fstream>
+#include <dirent.h>
+#include <cstdlib>
 
 // Inclusões de Bibliotecas adicionais
 #include <nlohmann/json.hpp>
@@ -39,6 +41,8 @@ void printJSONConfig();
 void showInfoHelp();
 void initProjectRead(char*);
 void fileInterpreter(FILE*, bool);
+int readAllDirectory(string);
+void runningInitWIgnore(FILE*, char*);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
@@ -50,9 +54,13 @@ bool reading_file = false;
 bool all_path = false;
 bool path_defined = false;
 
+bool block_symbol = false;
+bool line_symbol = false;
+
 // Variáveis inteiras para contadores
 int count_path = 0;
 int count_ext = 0;
+int count_init = 0;
 
 // Objetos JSON
 json config;
@@ -62,6 +70,7 @@ json paths;
 string line_comment;
 string start_comment;
 string end_comment;
+string cli_file;
 
 // Variáveis do Windows
 HANDLE color;
@@ -204,6 +213,7 @@ void initProjectRead(char *source){
 		
 		int count_langs = config["EXTENSIONS"]["lang"].size();
 		
+
 		for(int i = 0; i < count_langs; i++){
 			json extension = config["EXTENSIONS"]["lang"][i];
 			int count_exts = extension["exts"].size();
@@ -332,19 +342,21 @@ void pathCommand(char *line){
 	}
 }
 
+// @description Comando init para processar as leituras
 void initCommand(char *line){
 	// TODO: pegar parâmetro de tempo pela variável line
 
 	if(path_defined){
 		FILE *file_read;
 		if(all_path){
-
+			string directory = config["INIT"]["dir"];
+			readAllDirectory(directory);
 		}else{
 			if(paths["paths"] != NULL){
 				
 				cout << endl;
-				for(int i = 0; i < paths["paths"].size(); i++){
-					string files = paths["paths"][i];
+				for(; count_init < paths["paths"].size(); count_init++){
+					string files = paths["paths"][count_init];
 					char *filesChar = (char*) malloc(files.length());
 					toChar(files, filesChar);
 
@@ -353,41 +365,12 @@ void initCommand(char *line){
 						std::cout << "O arquivo '" << filesChar << "' definido no path nao existe!" << endl;
 						SetConsoleTextAttribute(color, LIGHT_WHITE);
 					}else{
-						bool ignore = false;
-						for(int j = 0; j < config["INIT"]["ignore"].size(); j++){
-							string ignore_ext = config["INIT"]["ignore"][j];
-							if(contains(filesChar, ignore_ext)){
-								ignore = true;
-								break;
-							}
-						}
-						
-						if(!ignore){
-							SetConsoleTextAttribute(color, LIGHT_CYAN);
-							std::cout << "@init ";
-							SetConsoleTextAttribute(color, LIGHT_WHITE);
-							std::cout << "log: Processando arquivo ";
-							SetConsoleTextAttribute(color, DARK_YELLOW);
-							std::cout << "'" << filesChar << "' ";
-							SetConsoleTextAttribute(color, LIGHT_WHITE);
-							std::cout << "..." << endl;
-
-							fileInterpreter(file_read, false);
-
-						}else{
-							SetConsoleTextAttribute(color, LIGHT_CYAN);
-							std::cout << "@init ";
-							SetConsoleTextAttribute(color, LIGHT_WHITE);
-							std::cout << "log: ";
-							SetConsoleTextAttribute(color, LIGHT_RED);
-							std::cout << "o arquivo '" << filesChar << "' nao contem uma extensao valida!" << endl;
-							SetConsoleTextAttribute(color, LIGHT_WHITE);
-						}
-
-						
+						runningInitWIgnore(file_read, filesChar);
 					}
 					free(filesChar);
+				
 				}
+				
 			}
 
 			if(paths["exts"] != NULL){
@@ -400,47 +383,103 @@ void initCommand(char *line){
 
 }
 
+// @description função de interpretador de comandos
 void fileInterpreter(FILE* file, bool is_read){
 	char line[1024];
+	block_symbol = false;
+
 	while((fgets(line, sizeof(line), file)) != NULL){
+		line_symbol = false;
 
-		if(is_read){
-			if(contains(line, end_comment)) reading_init = false;
+		if(contains(line, start_comment)) block_symbol = true;
+		if(contains(line, line_comment)) line_symbol = true;
 
-			reading_init = (contains(line, start_comment) || contains(line, line_comment)) ? true : reading_init;
-			is_read = reading_init;
-		}else{
-			if(contains(line, end_comment)) reading_file = false;
-
-			reading_file = (contains(line, start_comment) || contains(line, line_comment)) ? true : reading_file;
-			is_read = reading_file;
-		}
-
-		
-		if(is_read){
-			if(contains(line, "@path ")){
-				pathCommand(line);
-				path_defined = true;
-			}
-			if(contains(line, "@init")){
-				initCommand(line);
+		if(block_symbol || line_symbol){
+			if(is_read){
+				if(contains(line, "@path ")){
+					pathCommand(line);
+					path_defined = true;
+				}
+				if(contains(line, "@init")){
+					initCommand(line);
+				}
 			}
 			if(contains(line, "@branch")){
-				//if(contains(line, end_comment))
-				//	reading_file = false;
-			
 				cout << "\tO comando @branch existe!" << endl;
 			}
 			if(contains(line, "@commit")){
-				//if(contains(line, end_comment))
-				//	reading_file = false;
-				
 				cout << "\tO comando @commit existe!" << endl;
 			}
-		}	
+			if(contains(line, "@description")){
+				cout << "\tO comando @description existe!" << endl;
+			}
+		}
+
+		if(contains(line, end_comment)) block_symbol = false;
 
 	}
 
+}
+
+int readAllDirectory (std::string nomeDir) {
+    DIR *dir = 0;
+    struct dirent *input = 0;
+ 
+    dir = opendir (nomeDir.c_str());
+ 
+    if (dir == 0) return 0;
+
+ 
+    //Iterar sobre o diretorio
+    while (input = readdir (dir)){
+		//std::cout << entrada->d_name << std::endl;
+		if(input->d_namlen > 2){
+			FILE *filedir = fopen(input->d_name, "r");
+				
+			if(filedir != NULL)
+				runningInitWIgnore(filedir, input->d_name);
+
+			readAllDirectory(input->d_name);
+
+		}
+	}
+            
+ 
+    closedir (dir);
+     
+    return 1;
+}
+
+void runningInitWIgnore(FILE *file_open, char *name_file){
+	bool ignore = false;
+	for(int j = 0; j < config["INIT"]["ignore"].size(); j++){
+		string ignore_ext = config["INIT"]["ignore"][j];
+		if(contains(name_file, ignore_ext) || name_file == cli_file){
+			ignore = true;
+			break;
+		}
+	}
+
+	if(!ignore){
+		SetConsoleTextAttribute(color, LIGHT_CYAN);
+		std::cout << "@init ";
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "log: Processando arquivo ";
+		SetConsoleTextAttribute(color, DARK_YELLOW);
+		std::cout << "'" << name_file << "' ";
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "..." << endl;
+					
+		fileInterpreter(file_open, false);
+	}else{
+		SetConsoleTextAttribute(color, LIGHT_CYAN);
+		std::cout << "@init ";
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "log: ";
+		SetConsoleTextAttribute(color, LIGHT_RED);
+		std::cout << "o arquivo '" << name_file << "' nao contem uma extensao valida!" << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+	}	
 }
 
 #endif

@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 			std::cout << "\nInicializando Projeto...\n" << endl;
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			
+			cli_file = argv[2];
 			initProjectRead(argv[2]);
 		}
 		

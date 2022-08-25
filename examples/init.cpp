@@ -1,12 +1,10 @@
 /*
-    @path examples/ignored/program.exe
-    @path examples/branch/teste1.js
-    @path examples/commit/teste2.js
+    @path [all]
     
     O código abaixo não é processado, apenas o próximo comentário
 */
 
 
-const char* value = "@path ";
+const char* value = "@init ";
 
 /* @init */
