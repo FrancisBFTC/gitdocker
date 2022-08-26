@@ -41,8 +41,9 @@ void printJSONConfig();
 void showInfoHelp();
 void initProjectRead(char*);
 void fileInterpreter(FILE*, bool);
-int readAllDirectory(string);
+int readAllDirectory(string, bool);
 void runningInitWIgnore(FILE*, char*);
+void changeSymbolComments(json);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
@@ -71,6 +72,7 @@ string line_comment;
 string start_comment;
 string end_comment;
 string cli_file;
+stringstream conc;
 
 // Variáveis do Windows
 HANDLE color;
@@ -200,7 +202,7 @@ void initProjectRead(char *source){
 		FILE *file;
 		if((file = fopen(source, "r")) == NULL){
 			SetConsoleTextAttribute(color, DARK_RED);
-			std::cout << "O arquivo de codigo-fonte nao existe!" << endl;
+			std::cout << "--init error: O arquivo de codigo-fonte nao existe!" << endl;
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			return;	
 		}
@@ -219,25 +221,8 @@ void initProjectRead(char *source){
 			int count_exts = extension["exts"].size();
 			
 			for(int j = 0; j < count_exts; j++){
-				if(extension["exts"][j] == ext){
-					
-					switch(extension["comments"].size()){
-						case 1:
-							line_comment = extension["comments"][0];
-							start_comment = extension["comments"][0];
-							end_comment = "";
-							break;
-						case 2:
-							line_comment = extension["comments"][0];
-							start_comment = extension["comments"][0];
-							end_comment = extension["comments"][1];
-							break;
-						case 3:
-							line_comment = extension["comments"][0];
-							start_comment = extension["comments"][1];
-							end_comment = extension["comments"][2];
-							break;
-					}
+				if(extension["exts"][j] == ext){	
+					changeSymbolComments(extension["comments"]);
 					break;
 				}
 			}
@@ -350,12 +335,15 @@ void initCommand(char *line){
 		FILE *file_read;
 		if(all_path){
 			string directory = config["INIT"]["dir"];
-			readAllDirectory(directory);
+			conc << directory;
+			readAllDirectory(directory, false);
+
+			conc.str("");
 		}else{
 			if(paths["paths"] != NULL){
 				
 				cout << endl;
-				for(; count_init < paths["paths"].size(); count_init++){
+				for(count_init = 0; count_init < paths["paths"].size(); count_init++){
 					string files = paths["paths"][count_init];
 					char *filesChar = (char*) malloc(files.length());
 					toChar(files, filesChar);
@@ -374,7 +362,11 @@ void initCommand(char *line){
 			}
 
 			if(paths["exts"] != NULL){
+				string directory = config["INIT"]["dir"];
+				conc << directory;
+				readAllDirectory(directory, true);
 
+				conc.str("");
 			}
 		}
 
@@ -421,27 +413,126 @@ void fileInterpreter(FILE* file, bool is_read){
 
 }
 
-int readAllDirectory (std::string nomeDir) {
+// @description Ler todos os diretórios pelo parâmetro [all] ou [all: ...]
+int readAllDirectory (std::string nomeDir, bool is_allext) {
     DIR *dir = 0;
     struct dirent *input = 0;
  
+	// nomeDir.c_str()
     dir = opendir (nomeDir.c_str());
  
     if (dir == 0) return 0;
 
- 
     //Iterar sobre o diretorio
     while (input = readdir (dir)){
-		//std::cout << entrada->d_name << std::endl;
+
 		if(input->d_namlen > 2){
-			FILE *filedir = fopen(input->d_name, "r");
-				
-			if(filedir != NULL)
-				runningInitWIgnore(filedir, input->d_name);
+			
+			stringstream conc1;
+			conc1 << nomeDir << input->d_name;
+			FILE *filedir = fopen(conc1.str().c_str(), "r");
+			string rootdir = config["INIT"]["dir"];
+			
+			bool is_folder = filedir == NULL;
+			if(is_folder){
+				conc << input->d_name << "/";
 
-			readAllDirectory(input->d_name);
+				//cout << "PASTA: " << conc.str() << endl;
+				readAllDirectory(conc.str(), is_allext);
 
+				stringstream conc2;
+				conc2 << input->d_name << "/";
+				string root = conc.str().replace(conc.str().find(conc2.str()), conc2.str().length(), "");
+				conc.str("");
+				conc << root;
+
+			}else{
+				string full_dir = conc1.str().c_str(); // diretorio completo do arquivo
+
+				//cout << "ARQUIVO: " << full_dir << endl;
+
+				if(!is_allext){
+					if(contains(input->d_name, ".")){
+						char *ext = (char*) malloc(strlen(input->d_name));
+						substring(ext, input->d_name, indexOf(input->d_name, "."), strlen(input->d_name));
+
+						int count_langs = config["EXTENSIONS"]["lang"].size();
+						bool finded = false;
+						for(int i = 0; i < count_langs; i++){
+							json extension = config["EXTENSIONS"]["lang"][i];
+							int count_exts = extension["exts"].size();
+							
+							for(int j = 0; j < count_exts; j++){
+								if(extension["exts"][j] == ext){
+									changeSymbolComments(extension["comments"]);
+									finded = true;
+									break;
+								}
+							}
+							if(finded) break;
+						}
+
+						if(finded)
+							runningInitWIgnore(filedir, input->d_name); 
+
+						free(ext);
+					}
+				}else{
+					bool contain_ext = false;
+					char *ext = (char*) malloc(strlen(input->d_name));
+
+					if(contains(input->d_name, ".")){
+						substring(ext, input->d_name, indexOf(input->d_name, "."), strlen(input->d_name));
+						for(int x = 0; x < paths["exts"].size(); x++){
+							string ext_save = paths["exts"][x];
+
+							if(ext_save == ext){
+								contain_ext = true;
+								break;
+							}
+						}	
+					}
+					
+					if(contain_ext){
+						
+						int count_langs = config["EXTENSIONS"]["lang"].size();
+						bool finded = false;
+						for(int i = 0; i < count_langs; i++){
+							json extension = config["EXTENSIONS"]["lang"][i];
+							int count_exts = extension["exts"].size();
+							
+							for(int j = 0; j < count_exts; j++){
+								if(extension["exts"][j] == ext){
+									changeSymbolComments(extension["comments"]);
+									finded = true;
+									break;
+								}
+							}
+							if(finded) break;
+						}
+
+						if(finded)
+							runningInitWIgnore(filedir, input->d_name); 
+						else{
+							SetConsoleTextAttribute(color, LIGHT_CYAN);
+							std::cout << "@init ";
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							std::cout << "log: Erro => ";
+							SetConsoleTextAttribute(color, LIGHT_RED);
+							std::cout << "A extensao '" << ext << "' nao foi configurada no JSON!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+						} 
+
+					}
+						
+					free(ext);
+				}
+
+			}
+			
 		}
+
+		
 	}
             
  
@@ -450,6 +541,7 @@ int readAllDirectory (std::string nomeDir) {
     return 1;
 }
 
+// @description Executa processamento init ignorando extensões
 void runningInitWIgnore(FILE *file_open, char *name_file){
 	bool ignore = false;
 	for(int j = 0; j < config["INIT"]["ignore"].size(); j++){
@@ -475,11 +567,32 @@ void runningInitWIgnore(FILE *file_open, char *name_file){
 		SetConsoleTextAttribute(color, LIGHT_CYAN);
 		std::cout << "@init ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
-		std::cout << "log: ";
+		std::cout << "log: Erro => ";
 		SetConsoleTextAttribute(color, LIGHT_RED);
 		std::cout << "o arquivo '" << name_file << "' nao contem uma extensao valida!" << endl;
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 	}	
+}
+
+// @description Altera símbolos de comentários dinâmicamente para cada arquivo lido
+void changeSymbolComments(json comments){
+	switch(comments.size()){
+		case 1:
+			line_comment = comments[0];
+			start_comment = comments[0];
+			end_comment = "";
+			break;
+		case 2:
+			line_comment = comments[0];
+			start_comment = comments[0];
+			end_comment = comments[1];
+			break;
+		case 3:
+			line_comment = comments[0];
+			start_comment = comments[1];
+			end_comment = comments[2];
+			break;
+	}
 }
 
 #endif
