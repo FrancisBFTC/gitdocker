@@ -4,6 +4,10 @@
         "max_minor": "20",
         "max_patch": "none"
     },
+    "INIT" : {
+        "ignore": [".exe", ".obj", ".o", ".dll", ".json", ".md", ".dev", ".win", ".layout"],
+        "dir": "./"
+    },
     "EXTENSIONS":{
         "lang":[
             {
@@ -12,7 +16,7 @@
             },
             {
                 "exts": [".asm", ".inc"],
-                "comments": [";", ";;"]
+                "comments": [";"]
             },
             {
                 "exts": [".html"],

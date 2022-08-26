@@ -275,6 +275,7 @@ Nesta nova versão adicione suas funções, Exemplo: Um novo parâmetro da CLI e
 Com isto irei analisar o código e verificar se posso fazer o merge com a branch main.
 
 <a name="ver"></a>
+
 ## Versões do Projeto
 
 Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
