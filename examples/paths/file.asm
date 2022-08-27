@@ -6,5 +6,5 @@
 mov     ah, 2   ; não tem efeito no gitdocker
 
 ; @path valor2.asm
-; @commit
-; @description
+; @commit comentario do file.asm
+; @description descricao do file.asm

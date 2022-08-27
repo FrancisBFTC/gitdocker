@@ -5,11 +5,15 @@
         "max_patch": "none"
     },
     "INIT" : {
-        "ignore": [".exe", ".obj", ".o", ".dll", ".json", ".md", ".dev", ".win", ".layout"],
-        "dir": "./"
+        "ignore": [".exe", ".obj", ".o", ".dll", ".json", ".md", ".dev", ".win", ".layout", ".gitdock"],
+        "dir": "./examples/"
     },
     "EXTENSIONS":{
         "lang":[
+            {
+                "exts": [".gitdock"],
+                "comments": ["**", "(", ")"]
+            },
             {
                 "exts": [".c", ".cpp", ".h", ".js"],
                 "comments": ["//", "/*", "*/"]

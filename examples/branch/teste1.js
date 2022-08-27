@@ -1,4 +1,1 @@
-// @branch
-// @branch
-// @path init.js
-// @init
+// @commit Mensagem qualquer

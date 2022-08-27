@@ -44,10 +44,13 @@ void fileInterpreter(FILE*, bool);
 int readAllDirectory(string, bool);
 void runningInitWIgnore(FILE*, char*);
 void changeSymbolComments(json);
+string getString(char*, string);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
-void initCommand(char *);
+void initCommand();
+void commitCommand(char *);
+void descriptionCommand(char *);
 
 // Variáveis Booleanas para comandos e leitura
 bool reading_init = false;
@@ -230,12 +233,6 @@ void initProjectRead(char *source){
 		
 		
 		fileInterpreter(file, true);
-
-		SetConsoleTextAttribute(color, LIGHT_GREEN);
-		std::cout << "\nPaths Obj:" << paths["paths"] << endl;
-		SetConsoleTextAttribute(color, LIGHT_RED);
-		std::cout << "Exts Obj:" << paths["exts"] << endl;
-		SetConsoleTextAttribute(color, LIGHT_WHITE);
 			
 		std::fclose(file);	
 }
@@ -325,10 +322,49 @@ void pathCommand(char *line){
 			count_path++;
 		}		
 	}
+
+	SetConsoleTextAttribute(color, LIGHT_GREEN);
+	std::cout << "\nPaths Obj:" << paths["paths"] << endl;
+	SetConsoleTextAttribute(color, LIGHT_RED);
+	std::cout << "Exts Obj:" << paths["exts"] << endl;
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+}
+
+// @description Função do comando commit para mensagens de commit
+void commitCommand(char *line){
+	string msgCommand = getString(line, "@commit");
+	cout << "STRING : '" << msgCommand << "'" << endl;
+}
+
+// @description Função do comando description para descrições de commits
+void descriptionCommand(char *line){
+	string msgCommand = getString(line, "@description");
+	cout << "STRING : '" << msgCommand << "'" << endl;
+}
+
+string getString(char *line, string command){
+
+	string lineStr = toString(line);
+	int sizeStr = lineStr.find(command)+command.length()+1;
+
+	if(contains(line, end_comment)){
+		lineStr = lineStr.substr(sizeStr, lineStr.find(end_comment)-sizeStr+1);
+		reading_init = false;
+	}else{
+		if(contains(line, "\n"))
+			lineStr = lineStr.substr(sizeStr, lineStr.find("\n"));
+		else
+			lineStr = lineStr.substr(sizeStr, lineStr.length()+1);
+	} 
+
+	if(contains(line, "\n"))
+		lineStr[lineStr.length()-1] = 0;
+
+	return lineStr;
 }
 
 // @description Comando init para processar as leituras
-void initCommand(char *line){
+void initCommand(){
 	// TODO: pegar parâmetro de tempo pela variável line
 
 	if(path_defined){
@@ -353,8 +389,32 @@ void initCommand(char *line){
 						std::cout << "O arquivo '" << filesChar << "' definido no path nao existe!" << endl;
 						SetConsoleTextAttribute(color, LIGHT_WHITE);
 					}else{
-						runningInitWIgnore(file_read, filesChar);
+						if(contains(filesChar, ".")){
+							char *ext = (char*) malloc(strlen(filesChar));
+							substring(ext, filesChar, indexOf(filesChar, "."), strlen(filesChar));
+
+							int count_langs = config["EXTENSIONS"]["lang"].size();
+							bool finded = false;
+							for(int i = 0; i < count_langs; i++){
+								json extension = config["EXTENSIONS"]["lang"][i];
+								int count_exts = extension["exts"].size();
+								
+								for(int j = 0; j < count_exts; j++){
+									if(extension["exts"][j] == ext){
+										changeSymbolComments(extension["comments"]);
+										runningInitWIgnore(file_read, filesChar); 
+										finded = true;
+										break;
+									}
+								}
+								if(finded) break;
+							}
+								
+							free(ext);
+						}
+
 					}
+
 					free(filesChar);
 				
 				}
@@ -393,17 +453,18 @@ void fileInterpreter(FILE* file, bool is_read){
 					path_defined = true;
 				}
 				if(contains(line, "@init")){
-					initCommand(line);
+					initCommand();
 				}
+			}
+			//cout << "LINHA: " << line << endl;
+			if(contains(line, "@commit")){
+				commitCommand(line);
+			}
+			if(contains(line, "@description")){
+				descriptionCommand(line);
 			}
 			if(contains(line, "@branch")){
 				cout << "\tO comando @branch existe!" << endl;
-			}
-			if(contains(line, "@commit")){
-				cout << "\tO comando @commit existe!" << endl;
-			}
-			if(contains(line, "@description")){
-				cout << "\tO comando @description existe!" << endl;
 			}
 		}
 
