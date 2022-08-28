@@ -256,6 +256,53 @@ Abaixo mostrarei uma parte do arquivo **config.json** apresentando o objeto **IN
 
 **Nota:**  _Em outras sessões serão abordados mais a fundo sobre **Configurações no config.json**_
 
+### Processando todos os arquivos pelo INIT
+
+Se você pretende ler todos os arquivos de um determinado diretório, a partir da versão v0.1.4 foi implementado uma nova variável json - o **dir**. O comando `@init` processa todos os arquivos se inserido antes o comando `@path [all]` e inicia a leitura a partir do que está configurado em **dir** no arquivo **config.json**. Para inserir um diretório raiz do projeto, basta inserir **'./'** no dir e para ler uma pasta que está no diretório raiz, como exemplo: Includes; basta inserir no **'./Includes/'** no dir, abaixo mostrarei esta configuração no config.json:
+
+<img src="https://imgur.com/zTim4pO.png" alt="Diretório raiz no dir do config.json">
+
+Veja que novas extensões foram adicionadas na variável "ignore" onde os arquivos com estas extensões são ignorados pelo comando `@init` e no "dir" colocamos './' para ler arquivos do diretório raiz. No arquivo que será lido pelo parâmetro **--init** via CLI, adicione o seguinte script:
+
+<img src="https://imgur.com/CBHiXXd.png" alt="Script gitdocker no arquivo init.js">
+
+E como resultado você terá os seguintes logs no terminal:
+
+<img src="https://imgur.com/iriNlwh.png" alt="Logs no terminal do comando init e parâmetro all">
+
+Perceba que os 2 objetos Path e Ext são nulos, pois não é registrado nenhum arquivo, porém no sistema interno uma variável booleana é setada para realizar a leitura de todos os arquivos, o init loga no terminal os arquivos processados que estão no diretório principal e em sub-pastas. O init apresenta um erro mostrando que o init.js não pode ser processado, pois o arquivo atual que já está sendo lido é o init.js e ele não pode ser lido novamente, portanto é ignorado, porém sobre a mensagem de erro será corrigida em outras versões.
+
+### Processando extensões específicas pelo INIT
+
+Agora que já sabemos configurar o objeto INIT do config.json, vamos criar uma outra execução que vai ler todos os arquivos da pasta **./Includes/** que contém a extensão **.html**, então no config.json faça assim:
+
+<img src="https://imgur.com/58jvgu7.png" alt="JSON do dir com a pasta Includes">
+
+E no arquivo init.js, altere o parâmetro de `[all]` para `[all: .html]` que significa - _Leia todos os arquivos com a extensão .html_:
+
+<img src="https://imgur.com/zTq6rBw.png" alt="Inicialização do path com [all: ...]">
+
+A nossa pasta Includes está com os seguintes arquivos:
+
+<img src="https://imgur.com/X6uuJdp.png" alt="Arquivos da pasta Includes">
+
+Então nós temos este resultado:
+
+<img src="https://imgur.com/XHmhJTK.png" alt="Log da Inicialização do path com [all: ...]">
+
+O Objeto Ext agora tem a extensão .html e o init log apresenta apenas arquivos HTML processados. Mas você também pode ler outras extensões, como exemplo: .asm e .cpp, veja nas imagens abaixo:
+
+<img src="https://imgur.com/Onklvf8.png" alt="Extensões .asm e .cpp da pasta Includes">
+<br>
+<img src="https://imgur.com/X6uuJdp.png" alt="Log das extensões .asm e .cpp do init">
+
+E da mesma forma se quiser ler todos os arquivos da pasta **Includes**, é só alterar o parâmetro `[all: .asm, .cpp]` por apenas `[all]` e terá este resultado:
+
+<img src="https://imgur.com/XSPukZV.png" alt="Todos os arquivos da pasta Includes">
+
+**Nota**: _Os comandos `@path` e `@init` não são processados em outros arquivos diferentes daqueles que são inicializados por --init, no nosso caso eles serão apenas processados no arquivo em questão como no exemplo: init.js_
+
+
 <a name="colab"></a>
 ## Colaborações
 
