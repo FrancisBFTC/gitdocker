@@ -404,8 +404,23 @@ No terminal mostra o 1ª log de informação sobre o 1ª commit que está sendo 
 
 <img src="https://imgur.com/vun4HgE.png" alt="Comprovando no git log o novo commit">
 
+### Processando commits/descriptions de outros arquivos
 
+Agora que você já sabe como utilizar os comandos do GitDocker para efetuar commits e descriptions, iremos aproveitar todo o conteúdo estudado até aqui utilizando os comandos `@path` e `@init` para carregar outros arquivos. Agora nosso sistema terá um arquivo inicial chamado **sistema.gitdock** que terá commits e descriptions inicias descrevendo nosso sistema. A conexão com banco de dados será inserida numa pasta chamada **database** com o arquivo **conexao.h**, veja como está nossa estrutura de pastas:
 
+<img src="https://imgur.com/AF29qt3.png" alt="Estrutura de pastas">
+
+No arquivo **sistema.gitdock** vamos inserir o seguinte script do GitDocker:
+
+<img src="https://imgur.com/ISUEwxd.png" alt="Inicialização com commit e description">
+
+O GitDocker primeiro vai criar um commit do arquivo **sistema.gitdock** chamado **Sistema de compra e venda** com a descrição **este sistema efetua compras e vendas atraves de anuncios**, após isto irá carregar o arquivo **loja.cpp** que terá os commits e descriptions anteriores no qual será ignorado, pois já foi adicionado e também vai carregar o arquivo **conexao.h** da pasta **database** que terá o seguinte conteúdo:
+
+<img src="https://imgur.com/Sem6x5g.png" alt="2 commits do banco de dados">
+
+Perceba que nós temos 2 commits atuais: O **Conexao com o Banco de Dados** que terá a description da função **db_connect()** e o commit **criar CRUD do Banco de Dados** com as descriptions das funções **db_read()**, **db_insert()** e **db_delete()**. Porém como já sabemos, o GitDocker apenas efetua o 1ª commit não armazenado e só depois, na próxima execução que processa o próximo commit não armazenado. Aqui nós temos um 1ª commit que será a nossa função pra se conectar ao banco de dados e no nosso 2ª commit teremos um **CRUD** (**C**reate, **R**ead, **U**pdate e **D**elete) do banco de dados, porém não adicionamos a função de **Update**, isto foi proposital porque em um 1ª commit todo o arquivo já é adicionado na staged area e precisamos alterá-lo novamente para processar um 2ª commit, então vamos executar o comando `gitdocker --init sistema.gitdock` para realizar todas estas operações:
+
+<img src="" alt="Realizando operações do sistema.gitdock">
 
 <a name="colab"></a>
 ## Colaborações
