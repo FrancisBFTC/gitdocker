@@ -13,6 +13,8 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
   * <a href="#comm"> Exemplos de Comandos Interpretáveis</a>
     * <a href="#comm-path"> Comando Path</a>
     * <a href="#comm-init"> Comando Init</a>
+    * <a href="#comm-comm"> Comando Commit</a>
+    * <a href="#comm-desc"> Comando Description</a>
   * <a href="#colab"> Colaborações </a>
   * <a href="#ver"> Versões do Projeto </a>
 
@@ -302,6 +304,31 @@ E da mesma forma se quiser ler todos os arquivos da pasta **Includes**, é só a
 
 **Nota**: _Os comandos `@path` e `@init` não são processados em outros arquivos diferentes daqueles que são inicializados por --init, no nosso caso eles serão apenas processados no arquivo em questão como no exemplo: init.js_
 
+<a name="comm-comm"></a>
+## Comando Commit
+
+Quando você está desenvolvendo um software muitas das vezes você precisa armazenar seu projeto numa plataforma de versionamento como Github. O seu código ao decorrer do tempo acaba possuindo inúmeras alterações e diferenças com o código original e depois de muito tempo desenvolvendo, você não se lembra mais de quais foram as mudanças, porque mudou e quando mudou. Para resolver este problema, o git oferece subcomandos para definir mensagens e descrições, onde você pode descrever qual foi a sua atualização atual do seu software e assim subir para a plataforma GitHub o seu código atualizado e descrito, desta forma isso facilita não só na filtragem de alterações de código ao longo do tempo como também na segurança de poder recuperar aquilo que você perdeu devido a um bug atual.
+
+Então o git e o github oferece suporte a versionamento de código, armazenamento em nuvem e gerenciamento de projetos de forma organizada, no entanto, quando você está trabalhando com diversos arquivos em inúmeras linguagens, onde existem não só 1 ou 2, mas N arquivos incontáveis, o processo de versionamento se torna árduo e cansativo, então vamos supor uma seguinte situação: 
+
+* Você está desenvolvendo um projeto no tempo de 3 meses.
+* Seu projeto já contém de 20 a 50 arquivos.
+* A cada dia de codificação você altera 10 arquivos de código-fonte.
+* Você precisa descrever com detalhes cada alteração de cada 1 destes 10 arquivos.
+* No final do dia, você executa o git push para subir remotamente todos os seus arquivos modificados e descritos para a plataforma GitHub.
+
+Nesta situação você precisaria executar 10 comandos `git add` e +10 comandos `git commit`, com apenas 1 `git push` e 1 `git status` para analisar quais arquivos foram modificados, totalizando 22 comandos. Cada desenvolvedor tem sua própria duração de tempo de digitação, isso é relativo, alguns são mais rápidos, outros são mais lentos mas vamos considerar que você leva 5 segundos pra digitar o comando git add juntamente com seus arquivos e 10 segundos pra digitar o git commit (O tempo é maior pois existem mensagens a serem pensadas e escritas), o git push + o git status levou um tempo total de 5 segundos. O cálculo para saber o tempo total de todos os comandos seria: _(5 x 10) + (10 x 10) + 5_, dando um total de 155 segundos ou 2 minutos e 35 segundos, aproximadamente 3 minutos apenas para subir seu projeto pro GitHub, descartando o fato que existem vários outros comandos e o tempo de duração pode ser bem maior se o seu diretório utilizado no Git add for maior ou a mensagem de descrição do commit for demasiadamente grande. Ou melhor, quando você está trabalhando com vários diretórios grandes e completamente distintos entre si, no qual é preciso executar onerosamente vários git status pra relembrar e copiar os diretórios trabalhados. Com o tempo de trabalho, você vai estar cansado o suficiente pra cometer erros de digitação, errar o versionamento, etc.. Isso aumenta seu tempo de produção de software.
+
+O comando `@commit`, como também o comando `@description` vai resolver este problema, diminuindo consideravelmente seu tempo de desenvolvimento de softwares, lançando seus projetos cada vez mais rápido, documentando e versionando simultaneamente de forma automatizada. Logo, com estes comandos, o GitDocker vai gerar de forma inteligente as mensagens em um arquivo json chamado **info.json** e te dará a possibilidade de descrever suas funções e códigos direto no código-fonte, ou seja, não será preciso fechar seu editor, abrir seu terminal e digitar inúmeros comandos pra descrever seu sistema modificado, apenas usuflua dos comentários de códigos (Se você for organizado, é algo que você praticamente já faz) e descreva suas novas funções normalmente, o GitDocker fará o resto.
+
+### Como criar um commit com o GitDocker
+
+
+
+<a name="comm-desc"></a>
+## Comando Description
+
+TODO: Aqui vem a descrição do comando Description.
 
 <a name="colab"></a>
 ## Colaborações
