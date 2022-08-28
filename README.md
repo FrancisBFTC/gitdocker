@@ -380,7 +380,32 @@ Como pode ser visto, um novo array desc vazio foi criado e um novo msg no array 
 <a name="comm-desc"></a>
 ## Comando Description
 
-TODO: Aqui vem a descrição do comando Description.
+Anteriormente vimos sobre o comando commit, agora vamos focar nas **Descriptions**. O comando `@description` serve para detalhar ainda mais suas mensagens de commit. Como foi dito anteriormente, a mensagem de commit é curta e objetiva, uma espécie de **Título** da nova funcionalidade, especificando o que você fez ou alterou, ou o que corrigiu. As descrições detalham estas mudanças, de forma que você possa separar por listas o que foi feito na nova funcionalidade ou mudança.
+
+Vamos supor o seguinte exemplo: Você está desenvolvendo um software em C++ que contém 2 funcionalidades: **Comprar Produtos** e **Vender Produtos**. Na funcionalidade de **Comprar Produtos** existem 2 funções: a 1ª de criar um formulário de preenchimento e a 2ª de processar o pagamento baseado no formulário preenchido. Então você teria os seguintes comandos do GitDocker no arquivo **loja.cpp**:
+
+<img src="https://imgur.com/z5BTXCK.png" alt="Criando commits e descrições">
+
+A partir de agora, durante a escrita desta documentação, vamos inserir a palavra **Teste** antes de qualquer commit para dizer que aquilo se trata de um teste. Então como você pode ver, nós temos 1 comando `@commit` com sua mensagem **Funcionalidade de Compra** e 2 comandos `@description` no qual o 1ª recebe a descrição da 1ª função da funcionalidade que é **Criar formulário de compra** e a 2ª recebe a descrição da 2ª função da funcionalidade que é **Processar o pagamento**. É claro que você pode criar descrições mais complexas e detalhadas, mas como se trata de um teste, vamos ser mais objetivos. Abaixo de cada **description** nós temos um comentário dizendo `// aqui vai o seu código...`, ou seja, neste comentário é substituído pelo seu código da função correspondente e a description vai descrever esta função.
+
+Durante o desenvolvimento das funções, você pode criar uma description pra cada trecho de código que fizer, detalhando ainda mais seu desenvolvimento. Abaixo dos comentários nós temos o terminal que executamos o comando `gitdocker --init loja.cpp` e é apresentado o log tanto do `@commit` como da `@description`, é apresentado também como ficaria o comando se feito no git após a String **Commit Command:** e abaixo disso as mensagens da execução do próprio git, que de fato executa o comando acima. Se digitássemos **git log**, iremos ver como está armazenado no git:
+
+<img src="https://imgur.com/HqRcAM6.png" alt="Git log pra apresentar as informações">
+
+Já a 2ª funcionalidade que é **Vender Produtos**, você teria +2 funções: A 1ª função de criar um formulário para anúncio de produtos e a 2ª função para publicar em algum feed seu anúncio da venda baseado nos dados do seu formulário, então vamos adicionar novos comandos `@commit` e `@description` no mesmo arquivo **loja.cpp**:
+
+<img src="https://imgur.com/w7WshmW.png" alt="Criando novo commit e descrições">
+
+Alteramos o arquivo **loja.cpp** adicionando novos commits e descriptions, sem alterar os commits e descriptions anteriores que já foram executados, temos o novo commit **Funcionalidade de Venda**, que contém 2 funções descritas: **Cria formulario para anuncios** e **Publica no feed o anuncio**, cada qual terá um código abaixo da função substituindo o comentário `// aqui vai sua 1ª/2ª função`. É claro que você também poderá ter inúmeros outros comentários antes do código, porém se não for um comando do GitDocker, estes outros comentários não serão processados pelo GitDocker, apenas os comandos acima. Veremos como é apresentado no terminal:
+
+<img src="https://imgur.com/9SafAvU.png" alt="Apresentando no terminal as descriptions">
+
+No terminal mostra o 1ª log de informação sobre o 1ª commit que está sendo ignorado pois já foi adicionado anteriomente e o novo commit com suas novas mensagens definidas nos comandos `@commit` e `@description` e se comprovarmos no git log veremos:
+
+<img src="https://imgur.com/vun4HgE.png" alt="Comprovando no git log o novo commit">
+
+
+
 
 <a name="colab"></a>
 ## Colaborações
