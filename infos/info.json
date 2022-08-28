@@ -1,15 +1,1 @@
-{
-    "CONFIG":{
-        "version": "1.0.0",
-        "fullversion": "1.0.0.202208",
-        "builddate": "19082022",
-        "sha1": "********************",
-        "md5": "********************",
-        "description": "Meu software para Objetivo X",
-        "commits":{
-          
-          
-        },
-        "countcommits": "0"
-    }
-}
+{"INFOS":{"builddate":"19082022","commits":[{"desc":["descricao 1 do commit 1","descricao 2 do commit 1"],"msg":"Mensagem de commit lang.gitdock 1"},{"desc":["Esta funcionalidade faz X, Y e Z"],"msg":"Funcionalidade A no test.js"},{"desc":["Esta funcionalidade A faz X, Y e Z"],"msg":"Funcionalidade A no test1.js"},{"desc":["Esta e uma nova funcionalidade"],"msg":"Funcionalidade B no test.js"}],"description":"Meu software para Objetivo X","fullversion":"1.0.0.202208","md5":"********************","sha1":"********************","version":"1.0.0"}}
