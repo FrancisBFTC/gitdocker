@@ -1,6 +1,6 @@
 # GitDocker v0.2.1
 
-A partir desta versão é possível efetuar commits e descriptions em diversos arquivos. Ao invés de digitar 2 comandos (git add e git commit) x a quantidade de arquivos lidos, o que levaria muito tempo, o GitDocker agora trabalha com mensagens de commits automatizadas a nível do código-fonte, podendo assim economizar mais tempo na produção do software.
+A partir desta versão é possível efetuar commits e descriptions em diversos arquivos. Ao invés de digitar 2 comandos (git add e git commit) x a quantidade de arquivos lidos, o que levaria muito tempo, o GitDocker agora trabalha com mensagens de commits automatizadas a nível do código-fonte, podendo assim economizar mais tempo na produção de software.
 
 ### Bug Fixes
 
