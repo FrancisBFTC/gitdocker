@@ -294,7 +294,7 @@ O Objeto Ext agora tem a extensão .html e o init log apresenta apenas arquivos 
 
 <img src="https://imgur.com/Onklvf8.png" alt="Extensões .asm e .cpp da pasta Includes">
 <br>
-<img src="https://imgur.com/X6uuJdp.png" alt="Log das extensões .asm e .cpp do init">
+<img src="https://imgur.com/WG0SQQ2.png" alt="Log das extensões .asm e .cpp do init">
 
 E da mesma forma se quiser ler todos os arquivos da pasta **Includes**, é só alterar o parâmetro `[all: .asm, .cpp]` por apenas `[all]` e terá este resultado:
 
