@@ -420,7 +420,40 @@ O GitDocker primeiro vai criar um commit do arquivo **sistema.gitdock** chamado 
 
 Perceba que nós temos 2 commits atuais: O **Conexao com o Banco de Dados** que terá a description da função **db_connect()** e o commit **criar CRUD do Banco de Dados** com as descriptions das funções **db_read()**, **db_insert()** e **db_delete()**. Porém como já sabemos, o GitDocker apenas efetua o 1ª commit não armazenado e só depois, na próxima execução que processa o próximo commit não armazenado. Aqui nós temos um 1ª commit que será a nossa função pra se conectar ao banco de dados e no nosso 2ª commit teremos um **CRUD** (**C**reate, **R**ead, **U**pdate e **D**elete) do banco de dados, porém não adicionamos a função de **Update**, isto foi proposital porque em um 1ª commit todo o arquivo já é adicionado na staged area e precisamos alterá-lo novamente para processar um 2ª commit, então vamos executar o comando `gitdocker --init sistema.gitdock` para realizar todas estas operações:
 
-<img src="" alt="Realizando operações do sistema.gitdock">
+<img src="https://imgur.com/59i6pn1.png" alt="Realizando operações do sistema.gitdock">
+
+No terminal podemos ver que na inicialização do projeto, o 1ª commit que será realizado é o do sistema.gitdock com a mensagem **Sistema de compra e venda**, após isto, o GitDocker registra através do comando `@path` os arquivos **loja.cpp** (que já adicionamos seus commits) e **database/conexao.h**, é feito o commit do sistema.gitdock e depois é processado o arquivo loja.cpp pelo comando `@init`, porém é apresentado um log de informação dizendo que os commits já existem, claro, nós adicionamos eles na explicação anterior no título <a href="#comm-desc">Comando Description</a>. O comando init começa a processar o próximo arquivo que é o **conexao.h** que vai executar o commit **Conexao com o Banco de Dados** e sua única description da função **db_connect()**. Perceba-se que uma nova mensagem amarela foi apresentada - o Log de **AVISO**, dizendo que o commit **Criar CRUD do banco de dados** será adicionado no próximo commit e é isto que acontece quando tentamos criar 2 commits em uma única execução, portanto precisamos reexecutar o gitdocker novamente para commitar o CRUD.
+
+No entanto, dará um erro pelo próprio git se criássemos este commit mesmo sem alterar o arquivo **conexao.h**, pois ele já foi commitado e não está na staged area justamente por não ser modificado, isso é um bug desta versão 0.2.1 pois ainda precisamos criar a funcionalidade no GitDocker para filtrar arquivos modifieds e untrackeds que será implementado nas novas funções. Porém, ainda precisamos fazer funcionar se alterássemos o conexao.h, justamente por isso deixei a criação da função **db_update()** pro final, veja só:
+
+<img src="https://imgur.com/J1wwwEB.png" alt="Atualizando o arquivo conexao.h com db_update()">
+
+Adicionamos a função db_update() a descrevendo com description, e claro, devemos também adicionar uma mudança mínima (mesma que uma mera quebra de linha) nos arquivos que serão processados que é o **loja.cpp** e **sistema.gitdock** atualmente (Isto será corrigido nas próximas versões onde não precisará mais fazer mudanças mínimas), para adicioná-los no estado de modified pro GitDocker. Veja abaixo como será a execução:
+
+<img src="https://imgur.com/yVsgJjG.png" alt="Realizando init do conexao.h com db_update()">
+
+Perceba-se que agora commitamos o **criar CRUD do banco de dados** juntamente com suas descrições das 4 funções. É dado antes os logs de informações dizendo quais commits já foram efetuados e poderemos ver pelo comando **git status** que os arquivos commitados sumiram da área de estados modificados:
+
+<img src="https://imgur.com/6MsS9OF.png" alt="Git status">
+
+E com o **git log** vemos quais foram os nossos commits:
+
+<img src="https://imgur.com/YBotx1G.png" alt="Git log dos arquivos">
+
+E pra finalizar esta sessão, executamos novamente o GitDocker para tentar commitar os arquivos, foram eles já estão atualizados e nos dará esta mensagem:
+
+<img src="https://imgur.com/Q6VqqTK.png" alt="Arquivos atualizados">
+
+Os 5 commits do nosso sistema de loja já está armazenado no array JSON de forma ordenada e a ferramenta git já efetuou todos os commits, agora o que nos resta é enviar remotamente estas alterações pro GitHub, porém é claro que nós estamos numa pasta teste e não commitamos exatamente todos os arquivos. Como **config.json**, **info.json**,a deleção de um arquivo chamado **commit.gitdock** que utilizamos pra explicar as sessões anteriores e o próprio executável **GitDocker.exe** que é claro, ele não estará nesta pasta após a release, pois teremos um sistema de instalação do GitDocker que poderá executar em qualquer local do PC, juntamente com sua pasta **config/** que estará na pasta de instalação. 
+
+E se tentarmos como teste enviar remotamente pro GitHub, adicionando todos estes arquivos da pasta de teste **MyProject** na staged area, commitando-os e executando o **git push** a mensagem que nos dará é:
+
+<img src="https://imgur.com/n5tuwtn.png" alt="Tentando enviar remotamente">
+
+Teremos um simples erro dizendo que não pode ler do repositório remoto, justamente porque não temos um repositório criado no GitHub, algo que foi explicado anteriormente no início da sessão do **Comando commit**, pois estamos trabalhando apenas com uma pasta de testes que apesar de termos inicializado o git com o **git init**, não criamos o repositório na plataforma GitHub. Após criar o repositório na plataforma GitHub, dê o **git clone** com o link do seu repositório remoto e a partir daí, trabalhando em cima da pasta clonada, você pode fazer o envio remoto. 
+
+A partir daqui, nas próximas sessões, veremos sobre o novo comando que será criado - o `@branch` que vai realizar a mesma operação do **git checkout** e o **git push** para subir todos os arquivos commitados para a branch do repositório remoto, assim você poderá especificar uma nova branch (Se optar) ou a branch main e subir remotamente para a branch selecionada, isso será feito nas próximas versões de 0.2.3 à 0.2.5.
+
 
 <a name="colab"></a>
 ## Colaborações
