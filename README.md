@@ -1,5 +1,5 @@
 <a name="title"></a>
-# gitdocker
+# GitDocker
 
 Este é um projeto dedicado criar documentações automáticas durante um desenvolvimento de softwares e ao mesmo tempo realizar comandos do git para versionamento de código.
 
@@ -294,3 +294,4 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 ### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.0"> Versão 0.2.0 </a>
 
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.1"> Versão 0.2.1 </a>
+

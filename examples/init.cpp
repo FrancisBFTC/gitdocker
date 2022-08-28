@@ -1,10 +1,6 @@
 /*
-    @path [all]
-    
-    O código abaixo não é processado, apenas o próximo comentário
+    @commit Commit no lang.gitdock
+    @description Description no lang.gitdock
+    @path examples/branch/teste1.js
+    @init 
 */
-
-
-const char* value = "@init ";
-
-/* @init */

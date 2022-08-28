@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "iostream": "cpp",
+        "\"*.extension\"": "gitdock",
         "ostream": "cpp",
         "array": "cpp",
         "*.tcc": "cpp",
@@ -38,6 +38,15 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "typeinfo": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "@path": "gitdock",
+        "iostream": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "list": "cpp",
+        "mutex": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "cinttypes": "cpp"
     }
 }

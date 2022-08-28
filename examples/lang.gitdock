@@ -1,0 +1,10 @@
+(@commit Mensagem de commit lang.gitdock 1) 
+
+(
+    @description descricao 1 do commit 1
+    @description descricao 2 do commit 1
+    @path examples/commit/test.js
+    @path examples/commit/test1.js
+    @init
+)
+

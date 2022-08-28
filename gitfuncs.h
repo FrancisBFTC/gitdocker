@@ -44,16 +44,23 @@ void fileInterpreter(FILE*, bool);
 int readAllDirectory(string, bool);
 void runningInitWIgnore(FILE*, char*);
 void changeSymbolComments(json);
+void writeJSONFile(string, json);
+string getString(char*, string);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
-void initCommand(char *);
+void initCommand();
+void commitCommand(char *);
+void descriptionCommand(char *);
+void runCommit(bool);
 
 // Variáveis Booleanas para comandos e leitura
 bool reading_init = false;
 bool reading_file = false;
 bool all_path = false;
 bool path_defined = false;
+bool commited = false;
+bool last_commited = false;
 
 bool block_symbol = false;
 bool line_symbol = false;
@@ -62,10 +69,13 @@ bool line_symbol = false;
 int count_path = 0;
 int count_ext = 0;
 int count_init = 0;
+int count_commit = 0;
+int count_descr = 0;
 
 // Objetos JSON
 json config;
 json paths;
+json info;
 
 // Variáveis Strings
 string line_comment;
@@ -147,6 +157,19 @@ char * trim( char * in )
     return in;
 }
 
+void writeJSONFile(string filename, json jsondata){
+		fstream output;
+		output.open(filename, std::ios_base::out);
+
+		if(!output.is_open()){
+			SetConsoleTextAttribute(color, DARK_RED);
+			cerr << "Falha em abrir o arquivo '" << filename << "'\n";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+		}else{
+			output << jsondata << endl;
+		}
+}
+
 // @description Função pra imprimir dados da config JSON
 void printJSONConfig(){
 		std::ifstream f("configs/config.json");
@@ -210,8 +233,11 @@ void initProjectRead(char *source){
 		char *ext = (char*) malloc(strlen(source));
 		substring(ext, source, indexOf(source, "."), strlen(source));
 		
-		std::ifstream f("configs/config.json");
-		config = json::parse(f);
+		std::ifstream con("configs/config.json");
+		config = json::parse(con);
+
+		std::ifstream inf("infos/info.json");
+		info = json::parse(inf);
 		
 		int count_langs = config["EXTENSIONS"]["lang"].size();
 		
@@ -230,12 +256,6 @@ void initProjectRead(char *source){
 		
 		
 		fileInterpreter(file, true);
-
-		SetConsoleTextAttribute(color, LIGHT_GREEN);
-		std::cout << "\nPaths Obj:" << paths["paths"] << endl;
-		SetConsoleTextAttribute(color, LIGHT_RED);
-		std::cout << "Exts Obj:" << paths["exts"] << endl;
-		SetConsoleTextAttribute(color, LIGHT_WHITE);
 			
 		std::fclose(file);	
 }
@@ -325,10 +345,120 @@ void pathCommand(char *line){
 			count_path++;
 		}		
 	}
+
+	SetConsoleTextAttribute(color, LIGHT_GREEN);
+	std::cout << "\nPaths Obj:" << paths["paths"] << endl;
+	SetConsoleTextAttribute(color, LIGHT_RED);
+	std::cout << "Exts Obj:" << paths["exts"] << endl;
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+}
+
+// @description Função do comando commit para mensagens de commit
+void commitCommand(char *line){
+	 string msgCommand = getString(line, "@commit");
+
+	last_commited = false;
+	if(!commited){
+
+		bool exist_commit = false;
+		count_commit = info["INFOS"]["commits"].size();
+		for(int i = 0; i < count_commit; i++)
+			if(info["INFOS"]["commits"][i]["msg"] == msgCommand.c_str())
+				exist_commit = true;
+
+		if(!exist_commit){
+			vector<string> descriptions;
+
+			info["INFOS"]["commits"][count_commit]["msg"] = msgCommand.c_str();
+			info["INFOS"]["commits"][count_commit]["desc"] = descriptions;
+			
+			writeJSONFile("infos/info.json", info);
+			commited = true;
+			last_commited = true;
+
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@commit ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: ";
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "O commit '" << msgCommand << "' foi adicionado!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+		}else{
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@commit ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: INFO => ";
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "A mensagem '" << msgCommand << "' ja existe!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+		}
+
+	}else{
+		SetConsoleTextAttribute(color, LIGHT_CYAN);
+		std::cout << "@commit ";
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "log: AVISO => ";
+		SetConsoleTextAttribute(color, DARK_YELLOW);
+		std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!" << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+	}
+	
+}
+
+// @description Função do comando description para descrições de commits
+void descriptionCommand(char *line){
+	string msgCommand = getString(line, "@description");
+
+	if(last_commited){
+
+		bool exist_descr = false;
+		count_descr = info["INFOS"]["commits"][count_commit]["desc"].size();
+		for(int i = 0; i < count_descr; i++)
+			if(info["INFOS"]["commits"][count_commit]["desc"][i] == msgCommand.c_str())
+				exist_descr = true;
+
+		if(!exist_descr){
+
+			info["INFOS"]["commits"][count_commit]["desc"][count_descr] = msgCommand.c_str();
+			
+			writeJSONFile("infos/info.json", info);
+
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@description ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: ";
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "A descricao '" << msgCommand << "' foi adicionado!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+		}
+	}
+	
+}
+
+string getString(char *line, string command){
+
+	string lineStr = toString(line);
+	int sizeStr = lineStr.find(command)+command.length()+1;
+
+	if(contains(line, end_comment)){
+		lineStr = lineStr.substr(sizeStr, lineStr.find(end_comment)-sizeStr+1);
+		reading_init = false;
+	}else{
+		if(contains(line, "\n"))
+			lineStr = lineStr.substr(sizeStr, lineStr.find("\n"));
+		else
+			lineStr = lineStr.substr(sizeStr, lineStr.length()+1);
+	} 
+
+	if(contains(line, "\n"))
+		lineStr[lineStr.length()-1] = 0;
+
+	return lineStr;
 }
 
 // @description Comando init para processar as leituras
-void initCommand(char *line){
+void initCommand(){
 	// TODO: pegar parâmetro de tempo pela variável line
 
 	if(path_defined){
@@ -353,8 +483,32 @@ void initCommand(char *line){
 						std::cout << "O arquivo '" << filesChar << "' definido no path nao existe!" << endl;
 						SetConsoleTextAttribute(color, LIGHT_WHITE);
 					}else{
-						runningInitWIgnore(file_read, filesChar);
+						if(contains(filesChar, ".")){
+							char *ext = (char*) malloc(strlen(filesChar));
+							substring(ext, filesChar, indexOf(filesChar, "."), strlen(filesChar));
+
+							int count_langs = config["EXTENSIONS"]["lang"].size();
+							bool finded = false;
+							for(int i = 0; i < count_langs; i++){
+								json extension = config["EXTENSIONS"]["lang"][i];
+								int count_exts = extension["exts"].size();
+								
+								for(int j = 0; j < count_exts; j++){
+									if(extension["exts"][j] == ext){
+										changeSymbolComments(extension["comments"]);
+										runningInitWIgnore(file_read, filesChar); 
+										finded = true;
+										break;
+									}
+								}
+								if(finded) break;
+							}
+								
+							free(ext);
+						}
+
 					}
+
 					free(filesChar);
 				
 				}
@@ -393,17 +547,19 @@ void fileInterpreter(FILE* file, bool is_read){
 					path_defined = true;
 				}
 				if(contains(line, "@init")){
-					initCommand(line);
+					runCommit(is_read);
+					initCommand();
 				}
+			}
+			//cout << "LINHA: " << line << endl;
+			if(contains(line, "@commit")){
+				commitCommand(line);
+			}
+			if(contains(line, "@description")){
+				descriptionCommand(line);
 			}
 			if(contains(line, "@branch")){
 				cout << "\tO comando @branch existe!" << endl;
-			}
-			if(contains(line, "@commit")){
-				cout << "\tO comando @commit existe!" << endl;
-			}
-			if(contains(line, "@description")){
-				cout << "\tO comando @description existe!" << endl;
 			}
 		}
 
@@ -411,6 +567,39 @@ void fileInterpreter(FILE* file, bool is_read){
 
 	}
 
+	runCommit(is_read);
+}
+
+void runCommit(bool is_read){
+	if(commited){
+		int sizeDescription = info["INFOS"]["commits"][count_commit]["desc"].size();
+
+		stringstream git_add_conc;
+		string file_name = paths["paths"][count_init];
+
+		if(is_read)
+			git_add_conc << "git add " << cli_file;
+		else
+			git_add_conc << "git add " << file_name;
+
+		string git_add = git_add_conc.str();
+
+		stringstream git_commit_conc;
+		git_commit_conc << "git commit -m " << info["INFOS"]["commits"][count_commit]["msg"];
+
+		for(int i = 0; i < sizeDescription; i++){
+			string msgDescription = info["INFOS"]["commits"][count_commit]["desc"][i];
+			git_commit_conc << " -m \"" << "* " << msgDescription << "\"";
+		}
+
+		string git_commit = git_commit_conc.str();
+		cout << "Commit Command : " << git_commit << endl;
+		
+		system(git_add.c_str());
+		system(git_commit.c_str());
+	}
+
+	commited = false;
 }
 
 // @description Ler todos os diretórios pelo parâmetro [all] ou [all: ...]

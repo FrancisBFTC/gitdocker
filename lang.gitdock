@@ -1,0 +1,8 @@
+( @commit Primeira mensagem de commit)
+
+(
+    @commit Commit no lang.gitdock
+    @description Description no lang.gitdock
+    @path examples/paths/file.asm 
+    @init   
+)
