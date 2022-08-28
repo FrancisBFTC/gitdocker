@@ -360,7 +360,21 @@ Sobre o 2ª motivo, poderíamos comprovar por uma imagem como fica organizado as
 
 <img src="https://imgur.com/re4etL9.png" alt="Arquivo info.json">
 
-TODO: terminar descrições
+O **info.json** é um arquivo que vai guardar informações relacionadas ao software que está sendo desenvolvido. Ele poderá ser reescrito e lido constantemente pelos comandos `@commit`, `@description`, entre outros. Por este motivo, Ele fornece objetos e propriedades específicas para estas informações, incluindo o objeto **INFOS** que vai armazenar a data de compilação, os commits e descrições, a descrição principal do software, a versão do software, os hashes de integridade e vários outros valores. Cada índice do array **commits** vai armazenar uma mensagem de commit na propriedade **msg** e cada índice também contém um array chamado **desc** que armazena todas as descrições do último commit.
+
+Isso significa que a cada comando `@commit` processado no GitDocker, antes ele vai armazenar neste array JSON commit, então primeiro o GitDocker verifica se a mensagem já foi criada no json, caso não, ele cria no json e efetua o commit com esta mensagem e suas últimas descrições usando a ferramenta git, porém isso é feito uma vez em uma única execução do GitDocker, quando é executado novamente, os commits anteriores são ignorados e é processado o novo comando commit adicionado no arquivo que está sendo lido pelo GitDocker. Cada arquivo deve possuir apenas 1 commit por execução, o commit posterior será executado na próxima execução do GitDocker. Um commit pode ter inúmeras descrições, no qual é lido no array JSON **desc**, logo todas as descrições abaixo do último commit processado, será relacionado a este commit. Veremos abaixo a criação de outro commit pelo arquivo **commit.gitdock**:
+
+<img src="https://imgur.com/ZmEBuaA.png" alt="Outro commit no arquivo commit.gitdock">
+
+Inserimos um novo comando `@commit` abaixo do que já criamos anteriormente, porém como já é esperado, o commit anterior não será processado e enviará uma mensagem na tela, apenas o último commit:
+
+<img src="https://imgur.com/sgiSyzm.png" alt="Resultado do outro commit">
+
+Então a mensagem **Nova funcionalidade adicionada** já foi feita no commit anterior e armazenada no **info.json**, logo ela é ignorada e apenas consideradas os outros commits. Veremos agora como está no arquivo **info.json**:
+
+<img src="https://imgur.com/qhVVAuG.png" alt="Como esta no info.json">
+
+Como pode ser visto, um novo array desc vazio foi criado e um novo msg no array commit. Daí em diante, o GitDocker estará apontando pro final da lista para adicionar novos commits e novas descriptions.
 
 
 <a name="comm-desc"></a>
