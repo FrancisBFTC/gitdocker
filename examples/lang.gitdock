@@ -7,10 +7,3 @@
     @init
 )
 
-(@commit Mensagem de commit lang.gitdock 2)
-
-(
-    @description descricao 1 do commit 2
-    @description descricao 2 do commit 2
-)
-
