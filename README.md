@@ -339,9 +339,29 @@ O 1ª comando **git init** inicializa seu repositório com arquivos do git numa 
 
 Temos um arquivo modificado como apresenta na tela, que é o **commit.gitdock** e nele há o conteúdo do comando `@commit Nova funcionalidade adicionada`. Tudo o que devemos fazer agora é executar a initialização deste arquivo pelo GitDocker da seguinte forma:
 
-<img src="" alt="Adicionar imagem de teste do commit mais tarde">
+<img src="https://imgur.com/UVTRD0k.png" alt="Executando commit com o GitDocker">
 
-TODO: continuar tutorial do comando mais tarde.
+Aqui nós temos um commit gerado pelo comando `gitdocker --init commit.gitdock` que apresenta um log do `@commit` mostrando a mensagem de commit que foi adicionada e abaixo deste log, há outras mensagens da própria ferramenta git, pois o GitDocker executa o git para adicionar na staged area e commitar. Se comprovarmos usando o comando `git log`, vemos a nossa mensagem adicionada pelo `@commit`:
+
+<img src="https://imgur.com/ujvMP93.png" alt="Comprovando a mensagem pelo git log">
+
+Mas e se optarmos por executar novamente o comando `gitdocker --init commit.gitdock`? O que vai acontecer? É isto que vamos ver:
+
+<img src="https://imgur.com/sy809H0.png" alt="Executando novamente o commit do GitDocker">
+
+Temos uma log de informação dizendo que a mensagem de commit já foi adicionada. Isso por causa de 2 motivos:
+
+1. O arquivo não foi modificado e já foi commitado uma vez.
+2. A mensagem de commit foi armazenada em um arquivo JSON.
+
+Sobre o 1ª motivo, mesmo se decidíssemos alterar o arquivo commit.gitdock, mesmo apenas adicionando uma linha, este arquivo ficaria no estado de **modificado** pelo git, possibilitando assim um novo commit pela ferramenta **git**, porém ainda não seria possível efetuar o commit pelo GitDocker justamente porque há um arquivo chamado **info.json** que armazena todas as mensagens de commits do GitDocker e descrições (Que no caso a descrição atual foi vazia), porém se executar neste exato momento o comando `git status`, vai ver que o arquivo **commit.gitdock** sumiu da lista de arquivos vermelhos (modificados), então é claro que deveríamos alterá-lo primeiro pra efetuar um novo commit.
+
+Sobre o 2ª motivo, poderíamos comprovar por uma imagem como fica organizado as mensagens de commit no **info.json**:
+
+<img src="https://imgur.com/re4etL9.png" alt="Arquivo info.json">
+
+TODO: terminar descrições
+
 
 <a name="comm-desc"></a>
 ## Comando Description
