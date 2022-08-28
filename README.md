@@ -323,7 +323,25 @@ O comando `@commit`, como também o comando `@description` vai resolver este pro
 
 ### Como criar um commit com o GitDocker
 
+Primeiramente vamos utilizar uma vantagem do GitDocker que é a funcionalidade de **Adicionar novas extensões** e através disso, é possível ter suas próprias aberturas e fechaduras de comentários de linha em uma extensão de arquivo própria, um bom exemplo é o arquivo com extensão **.gitdock**, adicionado recentemente no projeto na versão 0.2.0, então veja abaixo como o objeto **EXTENSIONS** do arquivo **config.json** está configurado:
 
+<img src="https://imgur.com/3NjpoS1.png" alt="Configurações no config.json">
+
+O Objeto **EXTENSIONS** contém um array chamado **lang**, onde cada índice deste array é um objeto que contém as variáveis **exts** e **comments**. A variável **exts** contém um conjunto de extensões que utiliza os símbolos de comentários da variável **comments**, através disso é possível adicionar/configurar novas linguagens de programação com novos blocos de comentários, desta forma o GitDocker vai processar o código-fonte de qualquer linguagem e como lemos inicialmente um arquivo com o --init, este arquivo poderia ser do próprio GitDocker, então foi adicionado uma extensão .gitdock com os símbolos de comentários de linha `**` e comentários de bloco `(` e `)`, ou seja, tudo que tiver entre estes parênteses ou após os 2 asteriscos, serão interpretados, como nossos comandos `@path`, `@init`, `@commit`, etc... Então criaremos um novo arquivo chamado **commit.gitdock** com o seguinte conteúdo:
+
+<img src="https://imgur.com/CjAvUWu.png" alt="Arquivo commit.gitdock">
+
+Utilizamos o comando `@commit` e uma mensagem após ele descrevendo a nossa funcionalidade. Geralmente mensagens de commits são curtas e objetivas, como uma espécie de título da funcionalidade adicionada. Na sua pasta ou projeto, certifique-se de que é um repositório do git, isto é, você deve clonar primeiramente o seu repositório criado no github com `git clone link-do-meu-repositorio.git` para esta pasta e abrir o CMD/Terminal nesta pasta, porém se você criou uma pasta qualquer apenas para testes, é possível utilizar os comandos iniciais do GitDocker (Exceto o comando `@branch`, entre outros) sem afetar no funcionamento e para isto na sua pasta raiz digite o seguintes comandos - `git init` e `git status` e pressione enter para cada um:
+
+<img src="https://imgur.com/DJa9y0R.png" alt="Arquivo commit.gitdock">
+
+O 1ª comando **git init** inicializa seu repositório com arquivos do git numa pasta oculta chamada **.git** onde a ferramenta vai fazer suas operações em cima desta pasta. O 2ª comando vai verificar o estado dos arquivos, se eles são **modificados** (Já existentes, porém alterados) ou arquivos **untrackeds** (Novos arquivos criados), onde estes estados de arquivos aparecerá em vermelho. Então o próprio git nos dá a dica de digitar o git add arquivo para mover a área de **staged**, ou seja, você adiciona os arquivos modificados ou untrackeds num objeto do git, preparando-os para serem commitados. Você pode adicionar cada arquivo individualmente, por exemplo: **git add commit.gitdock** (Aqui adicionei o arquivo commit.gitdock na área de staged); Ou pode adicionar todos os arquivos de uma vez só utilizando `git add *` e só após fornece o commit. Além de ser mais rápido, há uma desvantagem, pois se você fez inúmeras alterações em vários arquivos, a mensagem de commit será 1 só se adicionar todos os arquivos pelo git add de uma só vez, porém adicionando cada arquivo individualmente, você terá mais controle em cada alteração, criando novas mensagens de commit distintas entre si, identificando em qual arquivo alterou e o porquê.
+
+Temos um arquivo modificado como apresenta na tela, que é o **commit.gitdock** e nele há o conteúdo do comando `@commit Nova funcionalidade adicionada`. Tudo o que devemos fazer agora é executar a initialização deste arquivo pelo GitDocker da seguinte forma:
+
+<img src="" alt="Adicionar imagem de teste do commit mais tarde">
+
+TODO: continuar tutorial do comando mais tarde.
 
 <a name="comm-desc"></a>
 ## Comando Description
