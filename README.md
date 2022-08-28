@@ -454,6 +454,7 @@ Teremos um simples erro dizendo que não pode ler do repositório remoto, justam
 
 A partir daqui, nas próximas sessões, veremos sobre o novo comando que será criado - o `@branch` que vai realizar a mesma operação do **git checkout** e o **git push** para subir todos os arquivos commitados para a branch do repositório remoto, assim você poderá especificar uma nova branch (Se optar) ou a branch main e subir remotamente para a branch selecionada, isso será feito nas próximas versões de 0.2.3 à 0.2.5.
 
+**Nota:** _Primeiramente será resolvido o bug de tentar processar arquivos que não estão no estado de modificados, deveremos filtrar arquivos untrackeds e modifieds na versão 0.2.2_
 
 <a name="colab"></a>
 ## Colaborações
