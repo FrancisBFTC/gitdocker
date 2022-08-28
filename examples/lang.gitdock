@@ -1,8 +1,14 @@
-( @commit Primeira mensagem de commit)
+(@commit Mensagem de commit lang.gitdock 1) 
 
 (
-    @commit Commit no lang.gitdock
-    @description Description no lang.gitdock
-    @path [all: .asm, .html] 
-    @init   
+    @description descricao 1 do commit 1
+    @description descricao 2 do commit 1
 )
+
+(@commit Mensagem de commit lang.gitdock 2)
+
+(
+    @description descricao 1 do commit 2
+    @description descricao 2 do commit 2
+)
+
