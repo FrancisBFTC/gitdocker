@@ -19,9 +19,9 @@ Nenhum.
 
 ### TODO
 
-- [ ] Criação de novos valores JSON no **info.json** para leitura e escrita de informações, Ex.: Commits & Descriptions.
-- [ ] Concluir a implementação do comando `@commit` considerando apenas o último commit escrito.
-- [ ] Concluir a implementação do comando `@description` filtrando todas as últimas descrições escritas para mesclagem com o último commit.
+- [x] Criação de novos valores JSON no **info.json** para leitura e escrita de informações, Ex.: Commits & Descriptions.
+- [x] Concluir a implementação do comando `@commit` considerando apenas o último commit escrito.
+- [x] Concluir a implementação do comando `@description` filtrando todas as últimas descrições escritas para mesclagem com o último commit.
 
 ## Versões do Projeto
 
@@ -39,3 +39,5 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.4"> Versão 0.1.4 </a>
 
 ### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.0"> Versão 0.2.0 </a>
+
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.1"> Versão 0.2.1 </a>
