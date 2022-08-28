@@ -1,9 +1,9 @@
 /*
-    @commit Adicionando funcionalidade X
+    @commit Funcionalidade A no test.js
     @description Esta funcionalidade faz X, Y e Z
 */
 
 /*
-  @commit Adicionando funcionalidade Y
+  @commit Funcionalidade B no test.js
   @description Esta e uma nova funcionalidade
 */
