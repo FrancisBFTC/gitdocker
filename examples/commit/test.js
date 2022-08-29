@@ -7,4 +7,3 @@
   @commit Funcionalidade B no test.js
   @description Esta e uma nova funcionalidade
 */
-
