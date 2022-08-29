@@ -3,5 +3,6 @@
     @commit Teste1: Verificacao 2
     @path examples/commit/test.js
     @init
-    
+
+    @commit Teste3: Verificao 3
 )
