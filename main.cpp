@@ -35,6 +35,32 @@ int main(int argc, char** argv) {
 
 			printJSONConfig();
 		}
+
+		if(strcmp(argv[1], "--config") == 0 || strcmp(argv[1], "-c") == 0){
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "\nConfigurando Projeto..." << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+			SetConsoleTextAttribute(color, LIGHT_YELLOW);
+			std::cout << "\nEste parametro ainda nao foi implementado nesta versao!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			// TODO configurar projeto aqui
+		}
+
+		if(strcmp(argv[1], "--search") == 0 || strcmp(argv[1], "-s") == 0){
+			if(argv[2] != NULL){
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "\nIniciando Pesquisa de Extensoes...\n" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+				searchJSONValues(argv[2]);
+			}else{
+				SetConsoleTextAttribute(color, LIGHT_RED);
+				std::cout << "\n--search erro => Nenhum valor foi especificado!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "Especifique uma extensao, Ex.: gitdocker --search .html" << endl;
+			}
+		}
 		
 	}else{
 		showInfoHelp();

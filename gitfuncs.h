@@ -39,6 +39,7 @@ int indexOf(char*, const char*);
 bool contains(char*, string);
 void printJSONConfig();
 void showInfoHelp();
+void searchJSONValues(char*);
 void initProjectRead(char*);
 void fileInterpreter(FILE*, bool);
 int readAllDirectory(string, bool);
@@ -218,13 +219,48 @@ void printJSONConfig(){
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 }
 
+void searchJSONValues(char *specified){
+	std::ifstream f("configs/config.json");
+	json data = json::parse(f);
+
+	//string speficied = toString(value);
+
+	int count_langs = data["EXTENSIONS"]["lang"].size();
+		
+	bool ext_finded = false;
+	for(int i = 0; i < count_langs; i++){
+		json extension = data["EXTENSIONS"]["lang"][i];
+		int count_exts = extension["exts"].size();
+			
+		for(int j = 0; j < count_exts; j++){
+			if(extension["exts"][j] == specified){	
+				ext_finded = true;
+				break;
+			}
+		}
+	}
+
+	if(ext_finded){
+		SetConsoleTextAttribute(color, LIGHT_GREEN);
+		std::cout << "Legal! A extensao '" << specified << "' foi encontrada! :)" << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+	}else{
+		SetConsoleTextAttribute(color, LIGHT_RED);
+		std::cout << "Que pena! A extensao '" << specified << "' nao foi encontrada! :(" << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "Configure esta extensao utilizando --config." << endl;
+	}
+	
+}
+
 // @description Função para imprimir dados de ajuda
 void showInfoHelp(){
 	printf("\nGitDocker v0.0.3 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
 	printf("Software de Documentacao e versionamento automatizado\n");
-	printf("\nusage: gitdocker [--init <arquivo>] [--show-config] \n\n");
+	printf("\nusage: gitdocker [--init <arquivo>] [--show-config] [--search <extensao>] \n\n");
 	printf("--init | -i <arquivo> : Define codigo principal onde contem comandos iniciais\n");
-	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n\n");
+	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n");
+	printf("--search | -s <extensao> : Efetua pesquisa de extensoes no JSON \n\n");
 }
 
 // @description Função pra iniciar projeto
