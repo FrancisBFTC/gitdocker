@@ -18,7 +18,7 @@ A partir desta versão é possível efetuar commits e descriptions em diversos a
 ### TODO
 
 - [x] Corrigir bug que impede os comandos `@commit` e `@description` serem realizados após o comando `@init` no arquivo principal pelo parâmetro **--init** via CLI.
-- [ ]  Iniciar implementação do parâmetro **--search** na CLI.
+- [x]  Iniciar implementação do parâmetro **--search** na CLI.
 - [ ]  Iniciar implementação do comando `@branch` que efetuará o git checkout e o git push.
 
 ## Versões do Projeto
