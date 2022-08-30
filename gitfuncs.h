@@ -45,6 +45,8 @@ int readAllDirectory(string, bool);
 void runningInitWIgnore(FILE*, char*);
 void changeSymbolComments(json);
 void writeJSONFile(string, json);
+void checkStateFiles();
+bool verifyModification(bool);
 string getString(char*, string);
 
 // Declaração de Funções de Comandos Gitdocker
@@ -65,6 +67,10 @@ bool last_commited = false;
 bool block_symbol = false;
 bool line_symbol = false;
 
+bool modified = false;
+bool untracked = false;
+bool is_modified = false;
+
 // Variáveis inteiras para contadores
 int count_path = 0;
 int count_ext = 0;
@@ -83,6 +89,7 @@ string start_comment;
 string end_comment;
 string cli_file;
 stringstream conc;
+string file_mod;
 
 // Variáveis do Windows
 HANDLE color;
@@ -253,11 +260,45 @@ void initProjectRead(char *source){
 				}
 			}
 		}
-		
-		
+
+		checkStateFiles();
 		fileInterpreter(file, true);
 			
 		std::fclose(file);	
+}
+
+void checkStateFiles(){
+		paths["modifieds"].clear();
+		system("git status > status.txt");
+		FILE *file_status = fopen("status.txt", "r");
+		if(file_status != NULL){
+			char line_status[500];
+			int count_mod = 0;
+			int count_unt = 0;
+			while(fgets(line_status, sizeof(line_status), file_status) != NULL){
+				if(contains(line_status, "modified:")){
+					modified = true;
+					string line_str = toString(line_status);
+					int sizeword = line_str.find("modified:")+strlen("modified:   ");
+					line_str = line_str.substr(sizeword, line_str.find("\n")-sizeword);
+					paths["modifieds"][count_mod] = line_str;
+					count_mod++;
+				}
+
+				if(contains(line_status, "Untracked files:")){
+					while(fgets(line_status, sizeof(line_status), file_status) != NULL){
+						if(!contains(line_status, "git add") && (strcmp(line_status, "\n") != 0)){
+							untracked = true;
+							char *line_unt = line_status;
+							line_unt = trim(line_unt);
+							paths["untrackeds"][count_unt] = line_unt;
+							count_unt++;
+						}	
+					}
+				}
+
+			}
+		}
 }
 
 // @description Função do comando Path: registra diretórios
@@ -367,22 +408,32 @@ void commitCommand(char *line){
 				exist_commit = true;
 
 		if(!exist_commit){
-			vector<string> descriptions;
+			if(is_modified){
+				vector<string> descriptions;
 
-			info["INFOS"]["commits"][count_commit]["msg"] = msgCommand.c_str();
-			info["INFOS"]["commits"][count_commit]["desc"] = descriptions;
-			
-			writeJSONFile("infos/info.json", info);
-			commited = true;
-			last_commited = true;
+				info["INFOS"]["commits"][count_commit]["msg"] = msgCommand.c_str();
+				info["INFOS"]["commits"][count_commit]["desc"] = descriptions;
+				
+				writeJSONFile("infos/info.json", info);
+				commited = true;
+				last_commited = true;
 
-			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@commit ";
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
-			std::cout << "log: ";
-			SetConsoleTextAttribute(color, LIGHT_GREEN);
-			std::cout << "O commit '" << msgCommand << "' foi adicionado!" << endl;
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@commit ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ";
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "O commit '" << msgCommand << "' foi adicionado!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}else{
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@commit ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ERRO => ";
+				SetConsoleTextAttribute(color, DARK_RED);
+				std::cout << "O arquivo '" << file_mod << "' nao foi modificado!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}
 		}else{
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
 			std::cout << "@commit ";
@@ -531,9 +582,11 @@ void initCommand(){
 
 // @description função de interpretador de comandos
 void fileInterpreter(FILE* file, bool is_read){
+
+	is_modified = verifyModification(is_read);
+	
 	char line[1024];
 	block_symbol = false;
-
 	while((fgets(line, sizeof(line), file)) != NULL){
 		line_symbol = false;
 
@@ -549,6 +602,9 @@ void fileInterpreter(FILE* file, bool is_read){
 				if(contains(line, "@init")){
 					runCommit(is_read);
 					initCommand();
+					checkStateFiles();
+					block_symbol = true;
+					is_modified = verifyModification(true);
 				}
 			}
 			//cout << "LINHA: " << line << endl;
@@ -561,13 +617,35 @@ void fileInterpreter(FILE* file, bool is_read){
 			if(contains(line, "@branch")){
 				cout << "\tO comando @branch existe!" << endl;
 			}
+
 		}
 
 		if(contains(line, end_comment)) block_symbol = false;
+		//cout << line << endl;
+		//cout << "BLOCK: " << block_symbol << endl;
+		//cout << "LINE: " << line_symbol << endl;
 
 	}
 
 	runCommit(is_read);
+
+}
+
+bool verifyModification(bool is_read){
+	for(int i = 0; i < paths["modifieds"].size(); i++){
+		string file_name = paths["modifieds"][i];
+		if(is_read){
+			file_mod = cli_file;
+			if(file_name == cli_file)
+				return true;
+		}else{
+			string file_path = paths["paths"][count_init];
+			file_mod = file_path;
+			if(file_name == file_path)
+				return true;
+		}
+	}
+	return false;
 }
 
 void runCommit(bool is_read){
@@ -575,12 +653,13 @@ void runCommit(bool is_read){
 		int sizeDescription = info["INFOS"]["commits"][count_commit]["desc"].size();
 
 		stringstream git_add_conc;
-		string file_name = paths["paths"][count_init];
 
 		if(is_read)
 			git_add_conc << "git add " << cli_file;
-		else
+		else{
+			string file_name = paths["paths"][count_init];
 			git_add_conc << "git add " << file_name;
+		}
 
 		string git_add = git_add_conc.str();
 
