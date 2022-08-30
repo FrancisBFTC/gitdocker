@@ -30,3 +30,4 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 ### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.0"> Versão 0.2.0 </a>
 
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.1"> Versão 0.2.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.2"> Versão 0.2.2 </a>
