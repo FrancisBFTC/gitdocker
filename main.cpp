@@ -20,10 +20,20 @@ int main(int argc, char** argv) {
 	
 	if(argc > 1){
 		if(strcmp(argv[1], "--init") == 0 || strcmp(argv[1], "-i") == 0){
-			SetConsoleTextAttribute(color, LIGHT_GREEN);
-			std::cout << "\nInicializando Projeto...\n" << endl;
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			if(!recursive){
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "\nInicializando Projeto...\n" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}else{
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "\nReinicializacao...\n" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}
 			
+			if(argv[3] != NULL)
+				if(strcmp(argv[3], "--recursive") == 0 || strcmp(argv[3], "-r") == 0)
+					recursive = true;
+
 			cli_file = argv[2];
 			initProjectRead(argv[2]);
 		}

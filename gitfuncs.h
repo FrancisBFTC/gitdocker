@@ -23,6 +23,7 @@
 #include <fstream>
 #include <dirent.h>
 #include <cstdlib>
+#include <TIME.H>
 
 // Inclusões de Bibliotecas adicionais
 #include <nlohmann/json.hpp>
@@ -49,6 +50,7 @@ void writeJSONFile(string, json);
 void checkStateFiles();
 bool verifyModification(bool);
 string getString(char*, string);
+string replace_all(string, string, string);
 
 // Declaração de Funções de Comandos Gitdocker
 void pathCommand(char *);
@@ -56,6 +58,7 @@ void initCommand();
 void commitCommand(char *);
 void descriptionCommand(char *);
 void runCommit(bool);
+void branchCommand(char *);
 
 // Variáveis Booleanas para comandos e leitura
 bool reading_init = false;
@@ -64,6 +67,9 @@ bool all_path = false;
 bool path_defined = false;
 bool commited = false;
 bool last_commited = false;
+bool branched = false;
+bool switched = false;
+bool contain_branch = false;
 
 bool block_symbol = false;
 bool line_symbol = false;
@@ -72,17 +78,23 @@ bool modified = false;
 bool untracked = false;
 bool is_modified = false;
 
+bool recursive = false;
+
 // Variáveis inteiras para contadores
 int count_path = 0;
 int count_ext = 0;
 int count_init = 0;
 int count_commit = 0;
 int count_descr = 0;
+int count_recursive = 0;
+int count_branch = 0;
+int index_branch = 0;
 
 // Objetos JSON
 json config;
 json paths;
 json info;
+json branchs;
 
 // Variáveis Strings
 string line_comment;
@@ -91,6 +103,7 @@ string end_comment;
 string cli_file;
 stringstream conc;
 string file_mod;
+string branch_str = "main";
 
 // Variáveis do Windows
 HANDLE color;
@@ -174,8 +187,36 @@ void writeJSONFile(string filename, json jsondata){
 			cerr << "Falha em abrir o arquivo '" << filename << "'\n";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 		}else{
-			output << jsondata << endl;
+			stringstream jsonstream;
+			jsonstream << jsondata;
+			string jsonstr = jsonstream.str();
+
+			jsonstr = replace_all(jsonstr, ",", ",\n");
+			jsonstr = replace_all(jsonstr, "{", "{\n");
+			jsonstr = replace_all(jsonstr, "},", "},\n");
+			jsonstr = replace_all(jsonstr, "}", "\n}");
+			jsonstr = replace_all(jsonstr, "[", "[\n");
+			jsonstr = replace_all(jsonstr, "]", "\n]");
+			jsonstr = replace_all(jsonstr, "\n\"", "\n\t\"");
+			jsonstr = replace_all(jsonstr, "],", "\t],");
+
+			output << jsonstr << endl;
 		}
+}
+
+string replace_all(string s, string x, string y){
+	size_t pos = 0;
+    while (pos += y.length())
+    {
+        pos = s.find(x, pos);
+        if (pos == std::string::npos) {
+            break;
+        }
+ 
+        s.replace(pos, x.length(), y);
+    }
+
+	return s;
 }
 
 // @description Função pra imprimir dados da config JSON
@@ -255,7 +296,7 @@ void searchJSONValues(char *specified){
 
 // @description Função para imprimir dados de ajuda
 void showInfoHelp(){
-	printf("\nGitDocker v0.0.3 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
+	printf("\nGitDocker v0.2.4 Build 202208 \nCriado por Francis (KiddieOS Community)\n");
 	printf("Software de Documentacao e versionamento automatizado\n");
 	printf("\nusage: gitdocker [--init <arquivo>] [--show-config] [--search <extensao>] \n\n");
 	printf("--init | -i <arquivo> : Define codigo principal onde contem comandos iniciais\n");
@@ -299,8 +340,38 @@ void initProjectRead(char *source){
 
 		checkStateFiles();
 		fileInterpreter(file, true);
-			
-		std::fclose(file);	
+		std::fclose(file);
+
+		if(contain_branch){
+			string git_push;
+			system("git add *");
+			system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit não foi efetuado pelo usuário.\"");
+
+			for(int i = 0; i < branchs.size(); i++){
+				stringstream push_conc;
+				string origin = branchs[i];
+				push_conc << "git push origin " << origin;
+				git_push = push_conc.str();
+
+				cout << "Comando: '" << git_push.c_str() << "'" << endl;
+			}
+		}
+
+		if(recursive){
+			stringstream rec_command;
+			rec_command << "gitdocker --init " << cli_file;
+			string command = rec_command.str();
+			for(int i = 0; i < count_recursive+1; i++){
+				fstream output;
+				output.open(cli_file, std::ios_base::app);
+
+				if(output.is_open()) output.write("\n", 1);
+				system(command.c_str());
+
+				system("git add *");
+				system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit não foi efetuado pelo usuário.\"");
+			}
+		}
 }
 
 void checkStateFiles(){
@@ -430,6 +501,80 @@ void pathCommand(char *line){
 	SetConsoleTextAttribute(color, LIGHT_WHITE);
 }
 
+void branchCommand(char *line){
+	string msgCommand = getString(line, "@branch");
+
+	if(!contain_branch){
+		contain_branch = true;
+		switched = false;
+		branched = false;
+		bool exist_branch = false;
+		count_branch = info["INFOS"]["branchs"].size();
+		for(int i = 0; i < count_branch; i++){
+			if(info["INFOS"]["branchs"][i] == msgCommand.c_str())
+				exist_branch = true;
+		}
+
+
+		//if(msgCommand.compare("main"))
+		//	exist_branch = true;
+
+		string git_checkout;
+		if(!exist_branch){
+			stringstream branch_conc;
+			branch_conc << "git checkout -b " << msgCommand;
+			git_checkout = branch_conc.str();
+
+			info["INFOS"]["branchs"][count_branch] = msgCommand.c_str();
+			writeJSONFile("infos/info.json", info);
+
+			branched = true;
+
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@branch ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: ";
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "A branch '" << msgCommand << "' foi criada!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+			system(git_checkout.c_str());
+
+			branch_str = msgCommand;
+
+		}else{
+			stringstream branch_conc;
+			branch_conc << "git checkout " << msgCommand;
+			git_checkout = branch_conc.str();
+
+			switched = true;
+
+			if(!msgCommand.compare(branch_str)){
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@branch ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ";
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "Alternando para branch '" << msgCommand << "'" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+				system(git_checkout.c_str());
+			}else{
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@branch ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: INFO => ";
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "A branch '" << msgCommand << "' ja esta selecionada!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}
+
+			branch_str = msgCommand;
+		}
+	}
+
+}
+
 // @description Função do comando commit para mensagens de commit
 void commitCommand(char *line){
 	 string msgCommand = getString(line, "@commit");
@@ -453,6 +598,13 @@ void commitCommand(char *line){
 				writeJSONFile("infos/info.json", info);
 				commited = true;
 				last_commited = true;
+
+				if(branched || switched){
+					branchs[index_branch] = branch_str.c_str();
+					index_branch++;
+					branched = false;
+					switched = false;
+				}
 
 				SetConsoleTextAttribute(color, LIGHT_CYAN);
 				std::cout << "@commit ";
@@ -488,6 +640,7 @@ void commitCommand(char *line){
 		SetConsoleTextAttribute(color, DARK_YELLOW);
 		std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!" << endl;
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		count_recursive++;
 	}
 	
 }
@@ -651,7 +804,7 @@ void fileInterpreter(FILE* file, bool is_read){
 				descriptionCommand(line);
 			}
 			if(contains(line, "@branch")){
-				cout << "\tO comando @branch existe!" << endl;
+				branchCommand(line);
 			}
 
 		}

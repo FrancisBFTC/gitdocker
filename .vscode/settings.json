@@ -47,6 +47,7 @@
         "mutex": "cpp",
         "ratio": "cpp",
         "system_error": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "string": "cpp"
     }
 }
