@@ -20,7 +20,7 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
 
 - [x] Criar parâmetro --config na CLI.
 - [x] Criar parâmetro --search na CLI.
-- [ ] Iniciar criação do comando `@branch`.
+- [x] Iniciar criação do comando `@branch`.
 
 
 ## Versões do Projeto
