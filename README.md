@@ -19,7 +19,7 @@ A partir desta versão é possível efetuar commits e descriptions em diversos a
 
 - [x] Corrigir bug que impede os comandos `@commit` e `@description` serem realizados após o comando `@init` no arquivo principal pelo parâmetro **--init** via CLI.
 - [x]  Iniciar implementação do parâmetro **--search** na CLI.
-- [ ]  Iniciar implementação do comando `@branch` que efetuará o git checkout e o git push.
+- [x]  Iniciar implementação do comando `@branch` que efetuará o git checkout e o git push.
 
 ## Versões do Projeto
 
@@ -40,4 +40,6 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.1#title"> Versão 0.2.1 </a>
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.2#title"> Versão 0.2.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.3#title"> Versão 0.2.3 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.4#title"> Versão 0.2.4 </a>
 
