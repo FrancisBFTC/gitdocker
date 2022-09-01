@@ -71,6 +71,26 @@ int main(int argc, char** argv) {
 				std::cout << "Especifique uma extensao, Ex.: gitdocker --search .html" << endl;
 			}
 		}
+
+		if(strcmp(argv[1], "--merge") == 0){
+			std::ifstream f("infos/info.json");
+			json infom = json::parse(f);
+
+			string oldbranch = infom["INFOS"]["merge"][0];
+			string newbranch = infom["INFOS"]["merge"][1];
+			stringstream merge_conc;
+			merge_conc << "git merge " << newbranch << " " << oldbranch << " -X theirs";
+			system(merge_conc.str().c_str());
+			
+			string currently = infom["INFOS"]["merge"][1];
+			infom["INFOS"]["merge"][0] = currently.c_str();
+			//infom["INFOS"]["merge"][1] = " ";
+			writeJSONFile("infos/info.json", infom);
+
+			stringstream push_conc;
+			push_conc << "git push origin " << newbranch;
+			system(push_conc.str().c_str());
+		}
 		
 	}else{
 		showInfoHelp();

@@ -104,6 +104,7 @@ string cli_file;
 stringstream conc;
 string file_mod;
 string branch_str = "main";
+string branchname;
 
 // Variáveis do Windows
 HANDLE color;
@@ -191,7 +192,7 @@ void writeJSONFile(string filename, json jsondata){
 			jsonstream << jsondata;
 			string jsonstr = jsonstream.str();
 
-			jsonstr = replace_all(jsonstr, ",", ",\n");
+			jsonstr = replace_all(jsonstr, "\",", "\",\n");
 			jsonstr = replace_all(jsonstr, "{", "{\n");
 			jsonstr = replace_all(jsonstr, "},", "},\n");
 			jsonstr = replace_all(jsonstr, "}", "\n}");
@@ -345,16 +346,28 @@ void initProjectRead(char *source){
 		if(contain_branch){
 			string git_push;
 			system("git add *");
-			system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit não foi efetuado pelo usuário.\"");
+			system("git commit -m \"Commit automatico do GitDocker 1\" -m \"Este commit nao foi efetuado pelo usuario.\"");
 
-			for(int i = 0; i < branchs.size(); i++){
+				if(switched){
+					stringstream branch_conc, merge_conc;
+					branch_conc << "git checkout " << branchname;
+					string git_checkout = branch_conc.str();
+
+					system("git stash save \"Changes Saved\"");
+					system(git_checkout.c_str());
+					
+					system("git add *");
+					system("git commit -m \"Commit automatico do GitDocker 2\" -m \"Este commit nao foi efetuado pelo usuario.\"");
+					
+				}
+		
 				stringstream push_conc;
-				string origin = branchs[i];
+				string origin = branchname;
 				push_conc << "git push origin " << origin;
 				git_push = push_conc.str();
 
-				cout << "Comando: '" << git_push.c_str() << "'" << endl;
-			}
+				system(git_push.c_str());
+				
 		}
 
 		if(recursive){
@@ -369,7 +382,7 @@ void initProjectRead(char *source){
 				system(command.c_str());
 
 				system("git add *");
-				system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit não foi efetuado pelo usuário.\"");
+				system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit nao foi efetuado pelo usuario.\"");
 			}
 		}
 }
@@ -504,74 +517,8 @@ void pathCommand(char *line){
 void branchCommand(char *line){
 	string msgCommand = getString(line, "@branch");
 
-	if(!contain_branch){
-		contain_branch = true;
-		switched = false;
-		branched = false;
-		bool exist_branch = false;
-		count_branch = info["INFOS"]["branchs"].size();
-		for(int i = 0; i < count_branch; i++){
-			if(info["INFOS"]["branchs"][i] == msgCommand.c_str())
-				exist_branch = true;
-		}
-
-
-		//if(msgCommand.compare("main"))
-		//	exist_branch = true;
-
-		string git_checkout;
-		if(!exist_branch){
-			stringstream branch_conc;
-			branch_conc << "git checkout -b " << msgCommand;
-			git_checkout = branch_conc.str();
-
-			info["INFOS"]["branchs"][count_branch] = msgCommand.c_str();
-			writeJSONFile("infos/info.json", info);
-
-			branched = true;
-
-			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@branch ";
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
-			std::cout << "log: ";
-			SetConsoleTextAttribute(color, LIGHT_GREEN);
-			std::cout << "A branch '" << msgCommand << "' foi criada!" << endl;
-			SetConsoleTextAttribute(color, LIGHT_WHITE);
-
-			system(git_checkout.c_str());
-
-			branch_str = msgCommand;
-
-		}else{
-			stringstream branch_conc;
-			branch_conc << "git checkout " << msgCommand;
-			git_checkout = branch_conc.str();
-
-			switched = true;
-
-			if(!msgCommand.compare(branch_str)){
-				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "@branch ";
-				SetConsoleTextAttribute(color, LIGHT_WHITE);
-				std::cout << "log: ";
-				SetConsoleTextAttribute(color, LIGHT_GREEN);
-				std::cout << "Alternando para branch '" << msgCommand << "'" << endl;
-				SetConsoleTextAttribute(color, LIGHT_WHITE);
-
-				system(git_checkout.c_str());
-			}else{
-				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "@branch ";
-				SetConsoleTextAttribute(color, LIGHT_WHITE);
-				std::cout << "log: INFO => ";
-				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "A branch '" << msgCommand << "' ja esta selecionada!" << endl;
-				SetConsoleTextAttribute(color, LIGHT_WHITE);
-			}
-
-			branch_str = msgCommand;
-		}
-	}
+	contain_branch = true;
+	branch_str = msgCommand;
 
 }
 
@@ -599,12 +546,7 @@ void commitCommand(char *line){
 				commited = true;
 				last_commited = true;
 
-				if(branched || switched){
-					branchs[index_branch] = branch_str.c_str();
-					index_branch++;
-					branched = false;
-					switched = false;
-				}
+				branchname = branch_str;
 
 				SetConsoleTextAttribute(color, LIGHT_CYAN);
 				std::cout << "@commit ";
@@ -839,6 +781,82 @@ bool verifyModification(bool is_read){
 
 void runCommit(bool is_read){
 	if(commited){
+		
+		if(contain_branch){
+			switched = false;
+			branched = false;
+			bool exist_branch = false;
+			count_branch = info["INFOS"]["branchs"].size();
+			for(int i = 0; i < count_branch; i++){
+				if(info["INFOS"]["branchs"][i] == branchname.c_str())
+					exist_branch = true;
+			}
+
+			//if(msgCommand.compare("main"))
+			//	exist_branch = true;
+
+			string git_checkout;
+			if(!exist_branch){
+				stringstream branch_conc;
+				branch_conc << "git checkout -b " << branchname;
+				git_checkout = branch_conc.str();
+
+				info["INFOS"]["branchs"][count_branch] = branchname.c_str();
+				writeJSONFile("infos/info.json", info);
+
+				branched = true;
+
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@branch ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ";
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "A branch '" << branchname << "' foi criada!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+				system(git_checkout.c_str());
+
+				info["INFOS"]["merge"][0] = branchname.c_str();
+				writeJSONFile("infos/info.json", info);
+
+				//branch_str = msgCommand;
+
+			}else{
+				//stringstream branch_conc;
+				//branch_conc << "git checkout " << branchname;
+				//git_checkout = branch_conc.str();
+
+				//if(!branchname.compare("main")){
+					SetConsoleTextAttribute(color, LIGHT_CYAN);
+					std::cout << "@branch ";
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+					std::cout << "log: ";
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "Alternando para branch '" << branchname << "'" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+					switched = true;
+
+					info["INFOS"]["merge"][1] = branchname.c_str();
+					writeJSONFile("infos/info.json", info);
+
+					//system(git_checkout.c_str());
+
+					/*
+				}else{
+					SetConsoleTextAttribute(color, LIGHT_CYAN);
+					std::cout << "@branch ";
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+					std::cout << "log: INFO => ";
+					SetConsoleTextAttribute(color, LIGHT_CYAN);
+					std::cout << "A branch '" << branchname << "' ja esta selecionada!" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+				}
+					*/
+				//branch_str = msgCommand;
+			}
+		}
+
 		int sizeDescription = info["INFOS"]["commits"][count_commit]["desc"].size();
 
 		stringstream git_add_conc;
