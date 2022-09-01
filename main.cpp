@@ -84,7 +84,6 @@ int main(int argc, char** argv) {
 			
 			string currently = infom["INFOS"]["merge"][1];
 			infom["INFOS"]["merge"][0] = currently.c_str();
-			//infom["INFOS"]["merge"][1] = " ";
 			writeJSONFile("infos/info.json", infom);
 
 			stringstream push_conc;
