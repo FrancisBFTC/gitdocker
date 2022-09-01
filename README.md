@@ -15,6 +15,7 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
     * <a href="#comm-init"> Comando Init</a>
     * <a href="#comm-comm"> Comando Commit</a>
     * <a href="#comm-desc"> Comando Description</a>
+    * <a href="#comm-bran"> Comando Branch</a>
   * <a href="#colab"> Colaborações </a>
   * <a href="#ver"> Versões do Projeto </a>
 
@@ -404,7 +405,7 @@ No terminal mostra o 1ª log de informação sobre o 1ª commit que está sendo 
 
 <img src="https://imgur.com/vun4HgE.png" alt="Comprovando no git log o novo commit">
 
-### Processando commits/descriptions de outros arquivos
+## Processando commits/descriptions de outros arquivos
 
 Agora que você já sabe como utilizar os comandos do GitDocker para efetuar commits e descriptions, iremos aproveitar todo o conteúdo estudado até aqui utilizando os comandos `@path` e `@init` para carregar outros arquivos. Agora nosso sistema terá um arquivo inicial chamado **sistema.gitdock** que terá commits e descriptions inicias descrevendo nosso sistema. A conexão com banco de dados será inserida numa pasta chamada **database** com o arquivo **conexao.h**, veja como está nossa estrutura de pastas:
 
@@ -455,6 +456,34 @@ Teremos um simples erro dizendo que não pode ler do repositório remoto, justam
 A partir daqui, nas próximas sessões, veremos sobre o novo comando que será criado - o `@branch` que vai realizar a mesma operação do **git checkout** e o **git push** para subir todos os arquivos commitados para a branch do repositório remoto, assim você poderá especificar uma nova branch (Se optar) ou a branch main e subir remotamente para a branch selecionada, isso será feito nas próximas versões de 0.2.3 à 0.2.5.
 
 **Nota:** _Primeiramente será resolvido o bug de tentar processar arquivos que não estão no estado de modificados, deveremos filtrar arquivos untrackeds e modifieds na versão 0.2.2_
+
+## Comando Branch
+
+Quando você está trabalhando com desenvolvimento de softwares, há uma grande necessidade de dividir o seu desenvolvimento em etapas. Algumas destas etapas podem conter apenas correções de bugs anteriores, uma nova funcionalidade ou até melhorias nas funções existentes, porém muito se sabe que nem tudo são flores, porque há um cenário possível de acontecer quando se trata de desenvolvimento, este cenário é o de **perda de modificações**. Suponhamos que você está programando um biblioteca virtual para oferecer 20 funcionalidades bem específicas, ao longo do tempo tudo vai bem mas na 13ª funcionalidade o seu software começa a parar de funcionar, bugs e bugs surgem e por semanas você não consegue resolver. Se você tivesse uma espécie de "Cópia" do ponto em que este sistema estava funcionando, você poderia restaurar para este ponto para entender o que você modificou e o que possívelmente pode ter causado o problema que parece insolucionável. É aqui que entra o conceito de **branchs**.
+
+As branchs além de possibilitar um backup de todas as suas modificações, ela organiza ainda mais o seu desenvolvimento em partes bem definidas e específicas. Imagine um livro de muitos capítulos, cada capítulo com suas próprias histórias, assim seria o seu software contendo várias branchs e cada branch com suas próprias funcionalidades. Você pode dividir cada versão do software para uma nova branch, ou um dos números consecutivos da versão, a forma de organização só depende de como você trabalha no desenvolvimento.
+
+As branchs permitem, no seu repositório local, que diferentes modificações coexistam em um mesmo espaço, ou seja, você tem um diretório na sua máquina e este diretório ele terá diversas cópias do seu mesmo projeto mas cada cópia contendo atualizações diferentes, onde as cópias mais atualizadas podem ter as mesmas funções das cópias anteriores. Na ferramenta **git** para se criar uma branch, você precisa primeiro começar na branch principal, chamada de **main**. É a partir daí que seu desenvolvimento se inicia e para criar uma nova branch, basta executar o comando **git checkout -b nome-da-branch**, onde você substitui o **nome-da-branch** pela seu próprio nome, um nome coerente ao que você está desenvolvendo naquela versão. Automaticamente, quando você cria uma nova branch, o git navega até ela, e em cima dela você desenvolve suas novas funções. Digamos que você já criou e desenvolveu em 5 branchs, porém você precisa voltar pra 3ª branch, então apenas execute o comando **git checkout nome-da-terceira-branch**, este comando sem o parâmetro **-b** vai apenas "Navegar" até a 3ª branch, e tudo o que você vai ver é seus arquivos do projeto sendo alterados/restaurados para o mesmo estado de quando você estava desenvolvendo nesta 3ª branch.
+
+Após criar uma nova branch e efetuar as correções/modificações em cima dela, você precisa executar o comando **git push origin nova-branch**, onde o nome **nova-branch** será substituída pelo nome da branch que você criou. Este último comando é para atualizar o seu repositório remoto com o seu repositório local, isto é, subir todas as suas modificações desta branch da sua máquina para a plataforma GitHub. Após isto, o seu repositório no GitHub terá um novo link para ser redirecionado para a nova branch, contendo seus próprios commits e te recomendando a criar uma nova **Pull Request** que são requisições com descrições das suas modificações, também sendo uma espécie de "preparação" para efetuar o **merging** ou **Mesclagem** e o início de análises dos códigos, onde você pode mesclar as modificações da sua nova branch com a branch principal **main** caso não há nenhum conflito de mesclagem, estes conflitos você pode resolver durante as análises. A branch main é aquela que está na página inicial, onde todos podem ver de forma rápida e visível, a que deve sempre está atualizada. Nesta sessão vamos entender como utilizar o comando `@branch` do GitDocker para efetuar todas estas operações do git.
+
+## Utilizando o comando Branch
+
+O comando `@branch` espera um valor, que é uma String colocada após o comando. Esta String pode ser a própria main, Ex.: `@branch main` ou uma nova branch como `@branch nova-funcionalidade`. Primeiramente, o GitDocker verifica se esta branch **nova-funcionalidade** existe no array **branch** do arquivo **info.json**, caso não existir, ele cria uma nova branch com este nome e todos os comandos commits/descriptions que estiverem após o comando `@branch`, é processado em cima desta nova branch, ou seja, se temos 3 commits, os 3 commits serão relacionados a **nova-funcionalidade**. Se o nome desta branch existir no arquivo **info.json**, o GitDocker vai apenas alternar para esta branch (Neste caso após os commits serem efetuados) e depois é preciso que você faça o **git merge** para branch que estava anteriormente com a branch alternada, assim os novos commits serão transferidos para a branch atual alternada. Na ferramenta git você faria **git merge branch-atual nova-funcionalidade -X theirs**, pois sem estes **-X theirs** você precisaria resolver os conflitos manualmente, agora na ferramenta GitDocker é apenas necessário fazer: **gitdocker --merge** e o próprio GitDocker vai saber qual estratégia de merge utilizar e em quais branchs.
+
+Assim como nos comandos `@commit` e `@description`, o comando `@branch` só é possível processar uma única vez em cada execução, isto é, a cada execução do GitDocker que possuir um novo commit ativo pra ser processado após o comando branch, para processar vários novos comandos consecutivos, basta inserir um novo parâmetro CLI da versão 0.2.4 que é a **--recursive**. Este parâmetro é inserido após o nome de arquivo na execução do parâmetro **--init** e serve para processar de forma recursiva o executável do GitDocker dentro do próprio GitDocker, desta forma é possível efetuar todos os novos commits, descriptions e branchs, ignorando aqueles que já foram criados. Após commitar/descrever as alterações na versão atual do seu software (branch atual), o GitDocker realiza o git push automaticamente, enviando ao repositório do GitHub as suas novas modificações, incluindo a sua nova branch. A partir de agora veremos como commitar alterações em cima da branch main e de outras novas:
+
+1. modifique seu arquivo **sistema.gitdock** com o seguinte trecho:
+
+<img src="" alt="Utilizando o comando branch">
+
+2. Execute o comando **gitdocker --init sistema.gitdock** e veja o resultado:
+
+<img src="" alt="Resultado do comando branch">
+
+
+
+
 
 <a name="colab"></a>
 ## Colaborações
