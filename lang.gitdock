@@ -1,8 +1,15 @@
 (
-    @commit Teste: Verificar modificacao1
-    @commit Teste1: Verificacao 2
-    @path examples/commit/test.js
-    @init
+    @commit Teste: commit recursivo 1
+    @description Descricao do Teste 1
 
-    @commit Teste3: Verificao 3
+    @commit Teste 2: commit recursivo 2
+    @description Descricao do Teste 2
+
+    @commit Teste 3: commit recursivo 3
+    @description Descricao do Teste 3
 )
+
+
+
+
+

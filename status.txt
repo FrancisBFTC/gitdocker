@@ -1,14 +1,17 @@
-On branch gitdocker-v0.2.2
+On branch gitdocker-v0.2.4
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-	modified:   GitDocker.exe
+	modified:   .vscode/settings.json
 	modified:   gitfuncs.h
 	modified:   infos/info.json
+	modified:   lang.gitdock
+	modified:   main.cpp
 	modified:   main.o
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
+	GitDocker.exe
 	status.txt
 
 no changes added to commit (use "git add" and/or "git commit -a")
