@@ -19,8 +19,8 @@ Nenhum.
 
 ### TODO
 
-- [ ] Corrigir Bug do comando `@branch` quando adicionado várias branchs em uma única execução, este bug cria todas as branchs porém não efetua os commits na branch específica.
-- [ ] Corrigir bug do git checkout , Ao navegar para uma branch anterior, um problema aparece devido a falta do git stash e impede a execução.
+- [x] Corrigir Bug do comando `@branch` quando adicionado várias branchs em uma única execução, este bug cria todas as branchs porém não efetua os commits na branch específica.
+- [x] Corrigir bug do git checkout , Ao navegar para uma branch anterior, um problema aparece devido a falta do git stash e impede a execução.
 
 ## Versões do Projeto
 
