@@ -457,6 +457,7 @@ A partir daqui, nas próximas sessões, veremos sobre o novo comando que será c
 
 **Nota:** _Primeiramente será resolvido o bug de tentar processar arquivos que não estão no estado de modificados, deveremos filtrar arquivos untrackeds e modifieds na versão 0.2.2_
 
+<a name="comm-bran"></a>
 ## Comando Branch
 
 Quando você está trabalhando com desenvolvimento de softwares, há uma grande necessidade de dividir o seu desenvolvimento em etapas. Algumas destas etapas podem conter apenas correções de bugs anteriores, uma nova funcionalidade ou até melhorias nas funções existentes, porém muito se sabe que nem tudo são flores, porque há um cenário possível de acontecer quando se trata de desenvolvimento, este cenário é o de **perda de modificações**. Suponhamos que você está programando um biblioteca virtual para oferecer 20 funcionalidades bem específicas, ao longo do tempo tudo vai bem mas na 13ª funcionalidade o seu software começa a parar de funcionar, bugs e bugs surgem e por semanas você não consegue resolver. Se você tivesse uma espécie de "Cópia" do ponto em que este sistema estava funcionando, você poderia restaurar para este ponto para entender o que você modificou e o que possívelmente pode ter causado o problema que parece insolucionável. É aqui que entra o conceito de **branchs**.
