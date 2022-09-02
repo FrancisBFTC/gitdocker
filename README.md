@@ -568,7 +568,54 @@ Não contém nenhum arquivo modificado e a branch main do repositório local est
 
 Teremos o nosso commit **Insere funcao main() vazia** e a descrição quando apontado a seta do mouse para a mensagem de commit, contendo a mesma descrição que colocamos no comando `@description`. Também teremos o commit **Salvando Untrackeds** que atualmente está na pasta **Configs**, porém ela também estava na pasta **Infos**, porém um segundo commit **substituiu** a mensagem "Salvando Untrackeds" da pasta Infos, este segundo commit é o **Commit automatico do GitDocker** que no final efetua este commit pois após os commits do usuário (Feitos pelo comando `@commit`), o arquivo **info.json** ainda é alterado pelo GitDocker, então para ser possível o envio remoto pelo git push, é preciso efetuar um último commit automatico, pra deixar tudo em ordem. Atualmente existem 2 commits automaticos no software GitDocker, porém estamos vendo apenas 1 na tela.
 
-De agora em diante, veremos a criação das próximas funções, onde cada branch será uma nova versão contendo a nova função.
+De agora em diante, veremos a criação das próximas funções, onde cada branch será uma nova versão contendo a nova função. Vamos criar a função de soma **Add_Num()** que espera 2 parâmetros inteiros: x e y. A função retorna um inteiro com o calculo de x + y, criaremos esta função para uma nova branch, ou seja, uma nova versão:
+
+<img src="https://imgur.com/9mV0Yxy.png" alt="Cria a função Add_Num()">
+
+Inserimos um novo nome de branch seguindo aquele padrão citado anteriormente, como: **calc-0.1**. O número 1 se trata da nova função Add_Num() criada. Descrevemos um commit objetivo do que está sendo feito com o comando `@commit` e descrevemos com mais detalhes o que esta função faz com o comando `@description`. Quando inserimos um novo nome de branch, o GitDocker identifica que aquele nome não existe no info.json, então ele cria uma nova branch e commita os arquivos nesta nova branch. Veremos o resultado no terminal após digitar **gitdocker --init main.cpp**:
+
+<img src="https://imgur.com/WSwljcx.png" alt="Criando branch e commit de Add_Num()">
+
+<a name="branch-creation"></a>
+Veja que o log do comando branch mostra que a branch **calc-0.1** foi criada, mas não mostra o erro **Fatal** como mostrou na criação da branch main, pois a branch de fato não existe e está sendo criada neste momento, podemos ver isto pela mensagem **Switched to a new branch 'calc-0.1'**, ou seja, ele cria e já alterna pra esta branch, onde os commits mostrados nas informações abaixo na tela são efetuados dentro desta branch. Após isto, é enviado via git push para o repositório remoto e já nos exibe uma alternativa que é criar um **Pull Request** acessando o link especificado. Veremos como está no nosso repositório remoto:
+
+<img src="https://imgur.com/cn4081b.png" alt="Mostrando a nova branch no repositorio remoto">
+
+Após atualizar a página com **F5**, Clicando no botão **main** pode ser visto a lista de branchs que são criadas, atualmente existe o main e o calc-0.1, logo acima pode ser visto o número de branchs que são **2 branches** e mais acima uma tela amarela dizendo que existem **pushes** recentes da mesma branch e que podemos **Comparar e Fazer Pull Requests** através do botão verde. Toda nova branch que é criada, esta tela amarela aparece por um intervalo de tempo e você pode clicar neste botão verde para criar um texto do que foi feito nesta nova versão, como: os bugs resolvidos, novas funcionalidades, TODOs (O que é pra fazer nas próximas versões) e até analisar quais arquivos foram modificados em quais linhas, incluindo **Inserções** e **Deleções**, para a partir daí determinar se você vai efetuar o merge ou não, caso efetue o merge, todos os arquivos e modificações serão enviados para a branch main, ou seja, "Mesclados" com o projeto que está na branch main. Podemos também clicar no link que nos foi oferecido pela própria ferramenta git na <a href="#branch-creation">criação da branch no terminal</a> citado anteriormente apenas pressionando a tecla **CTRL** + 1 clique com o mouse e seríamos redirecionados para esta página:
+
+<img src="https://imgur.com/KFrL6NV.png" alt="Página para criar um Pull Request">
+
+Adicionamos um texto básico descrevendo o que fizemos na nossa versão e também no sistema de comparação do Github vemos que a branch calc-0.1 está habilitado para realizar o merge com a branch main. Se rolarmos a página podemos ver quais arquivos e o que foi modificado, como também os commits:
+
+### O arquivo info.json:
+
+<img src="https://imgur.com/6fJQ51J.png" alt="Modificações no info.json">
+
+### O arquivo main.cpp:
+
+<img src="https://imgur.com/AWbVWkx.png" alt="Modificações no main.cpp">
+
+As linhas que estão marcadas com **vermelho** são aquelas que já estavam na branch anterior mas nesta nova branch elas foram apagadas e as linhas que estão marcadas com **verde** são aquelas que foram adicionadas na nova branch. Como podemos ver no arquivo info.json, o array json **branchs** está com o nome main e calc-0.1, uma nova descrição no array **desc** e a mensagem no **msg** foi adicionada dentro do array json **commits** e no array json **merge** foi apagado o valor main e substituído pelo valor calc-0.1 na posição 0. Pode-se perceber que nas linhas adicionadas contém um símbolo **'+'** e nas linhas apagadas contém um símbolo **'-'**. No main.cpp, temos apenas uma adição de linhas que é a nossa função **Add_Num()** juntamente com nossos comandos GitDocker nos comentários.
+
+Após pressionar no botão **Create Pull Request** nós temos esta tela:
+
+<img src="https://imgur.com/TddbV4e.png" alt="Tela do Pull Request">
+
+Abaixo destas informações terão as mensagens de commits que você poderá clicar e visualizar os códigos modificados. 
+
+Veremos agora a criação de uma nova branch com uma nova função - A Sub_Num():
+
+<img src="https://imgur.com/aAtTbVb.png" alt="Criando a branch calc-0.2">
+
+Agora criamos uma nova função que aceita a mesma quantidade de parâmetros e do mesmo tipo: x e y como inteiros, retornando o resultado inteiro do cálculo de x - y. Criamos novos commits e descrições na branch calc-0.2:
+
+<img src="https://imgur.com/IFLxaRw.png" alt="Resultado da branch calc-0.2">
+
+E no nosso repositório atualizado, temos nossos arquivos commitados na branch calc-0.2:
+
+<img src="https://imgur.com/8WIQnlW.png" alt="Repositorio remoto em calc-0.2">
+
+
 
 <a name="colab"></a>
 ## Colaborações
