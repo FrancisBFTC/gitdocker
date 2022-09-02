@@ -645,7 +645,114 @@ E checando nos repositórios remotos, nós temos as branchs calc-0.3 e calc-0.4:
 
 Agora implementaremos a última versão do nosso projeto que é a chamada das 4 funções na função principal main() pegando o dado do usuário no CMD e calculando usando as funções, também vamos compilar com g++.exe nosso executável e envia para o repositório remoto as últimas modificações, então no código da função principal faça o seguinte:
 
-<img src="" alt="Codigo na função principal main()">
+```cpp
+/*
+    Autor   : Francis
+    Data    : 02/09/2022
+    Programa: Calculadora simples em C++ para CMD
+
+    @branch calc-1.0
+    @commit Insere codigo da calculadora no main()
+    @description Incluimos os cabecalhos, declaramos os prototipos das funcoes e criamos o codigo para aceitar entradas do usuario na calculadora do main()
+*/
+
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+int Add_Num(int, int);
+int Sub_Num(int, int);
+int Mul_Num(int, int);
+int Div_Num(int, int);
+
+int main(void){
+    int op, num1, num2, res;
+    char rep = 's';
+
+    while(rep == 's'){
+        system("ECHO OFF");
+        system("CLS");
+        cout << "Escolha uma operacao:" << endl << endl;
+        cout << "1. Adicao" << endl;
+        cout << "2. Subtracao" << endl;
+        cout << "3. Multiplicacao" << endl;
+        cout << "4. Divisao" << endl;
+        cin >> op;
+
+        if(op >= 1 && op <= 4){
+            cout << endl;
+            cout << "Primeiro Numero: ";
+            cin >> num1;
+            cout << "Segundo Numero: ";
+            cin >> num2;
+            switch(op){
+                case 1: res = Add_Num(num1, num2); break;
+                case 2: res = Sub_Num(num1, num2); break;
+                case 3: res = Mul_Num(num1, num2); break;
+                case 4: res = Div_Num(num1, num2); break;
+                default: break;
+            }
+
+            cout << endl << "O resultado e : " << res << endl;
+        }else{
+            cout << "Operacao Invalida!" << endl;
+        }
+        cout << "Tentar novamente? (s/n)";
+        cin >> rep;
+    }
+
+    return 0;    
+}
+```
+
+No codigo acima, Incluimos as bibliotecas do C++ e usamos o namespace **std** para utilizar os objetos **cout** para saída de dados na tela e **cin** para entrada de dados, inserimos as entradas de dados com o objeto **cin** para pegar números inteiros inseridos pelo usuário, damos as opções de adição, subtração, multiplicação e divisão e perguntamos ao usuário qual operação ele quer seguir, aceitando uma operação o código executa um switch que verifica qual opção foi escolhida e a partir daí executamos uma das funções que criamos anteriormente, calculando as 2 entradas numéricas, então o resultado do cálculo é imprimido na tela. Percebe-se que alteramos aquela branch main inicial para **calc-1.0**, alteramos também a mensagem de commit e a description. Desta vez o GitDocker vai identificar que é um novo commit, criar uma nova branch com este commit contendo as novas modificações:
+
+<img src="https://imgur.com/bhRL5pR.png" alt="Commit da função principal main()">
+
+Ignore as mensagens de aviso pois estes commits já foram efetuados, isto acontece pois adicionamos um novo commit antes dos commits anteriores, porém em outras versões estas mensagens não irão aparecer mais nesta situação. Então criamos uma nova branch calc-1.0 com os novos commits e agora poderemos ver no repositorio remoto:
+
+<img src="https://imgur.com/8Du3twQ.png" alt="Repositorio remoto com a função principal main()">
+
+Tudo o que devemos fazer agora é enviar esta última atualização para a nossa branch principal - a **main**. E existe uma forma bem simples de fazer isto usando o GitDocker, considerando que ainda não testamos o nosso sistema, vamos compilar com o executável **g++.exe** na linha de comando do VSCode. Primeiro executamos o comando **g++ -c main.cpp -o main.o** para gerar um arquivo objeto **main.o** a partir do código-fonte **main.cpp**, o linker vai mesclar as funções chamadas das bibliotecas com o código compilado que nós criamos e executamos o comando **g++ main.o -o calc.exe** para compilar nosso executável **calc.exe** a partir do main.o, para executar a nossa calculadora basta clicar no calc.exe ou executar o calc na linha de comando:
+
+<img src="https://imgur.com/GtEvFBK.png" alt="Somando numeros">
+<img src="https://imgur.com/GvEduIF.png" alt="Subtraindo numeros">
+
+Você pode executar quantas vezes você quiser quaisquer uma das operações aritméticas, apenas pressione **s** e enter para repetir o processo, se pressionar **n** o programa finaliza sua execução. Agora que já testamos e checamos se está tudo funcionando, vamos atualizar o repositório main com a última branch criada que é o calc-1.0 e para isto precisamos "Alternar" para a branch main. O GitDocker a princípio não efetua os commits na branch alternada, pelo contrário, ele efetua os commits primeiro na branch atual e só aí realiza um **merge** entre a branch alternada e a branch atual, desta forma é possível ver os commits na branch alternada. O motivo disso é que quando um arquivo é modificado em cima de uma branch, não é possível salvar os arquivos modificados (Apenas untrackeds) e recuperá-los na branch alternada, em resumo isto é praticamente o que o merge pode fazer, já que o ato de salvar e recuperar arquivos modificados da branch atual antes da alternância, é o mesmo que alterar os arquivos da branch alternada em relação a branch atual, então a maneira mais viável é efetuando o merge entre estas 2 branchs, para isto adicione o nome da branch que você quer alternar, no nosso caso o **main** antes da função main():
+
+```cpp
+...
+...
+// @branch main
+// @commit Atualiza o main com a nova versao
+// @description O repositorio principal agora contem a versao mais recente da calculadora 1.0
+int main(void){
+    int op, num1, num2, res;
+    char rep = 's';
+
+    while(rep == 's'){
+      ...
+      ...
+```
+
+Agora execute o GitDocker:
+
+<img src="https://imgur.com/uQTSQ7H.png" alt="Alternando novamente para branch main">
+
+Após isto, foi atualizado o seu repositório local da branch main com a branch calc-1.0, então nos resta executar um novo parâmetro do GitDocker que é o **--merge**. Na ferramenta git precisaríamos executar **git merge main calc-1.0 -X theirs**, isso significa que mesclaríamos a branch calc-1.0 com a branch main aderindo a uma prioridade de modificações, que é a **theirs**, esta prioridade consiste em previlegiar as modificações de **outros** ou **deles**, ou seja, da outra branch, e desta forma o que tiver na branch main será substituída pelo o que está na outra branch, se optarmos por omitir o parâmetro -X do git, a ferramenta iria determinar um conflito de merge que você teria que resolver manualmente, re-analisando o código e excluindo as tags que o git gera, sem contar que você teria que inserir os nomes das branchs corretas para o merging. No entanto, pelo GitDocker ele já sabe qual é a branch que será alternada e mesclada e também qual é a estratégia de merge que deverá utilizar, neste caso o **ort** e o **theirs** e isto é feito pelo array **merge** no arquivo info.json que armazena a cada commit os nomes das branchs em posições específicas, então execute o **gitdocker --merge** na linha de comando:
+
+<img src="https://imgur.com/F0VPj0s.png" alt="Efetuando o merging entre o main e calc-1.0">
+
+Através deste comando, ele realiza o merge filtrando os arquivos que serão recebidos da outra branch, as modificações e após isto ele realiza o git push para enviar ao repositório remoto a nossa atualização e veja como nosso repositório remoto na main está:
+
+<img src="https://imgur.com/AOHXxkt.png" alt="Repositório do main atualizado">
+
+Perceba-se que também nós temos 2 commits automaticos do GitDocker: O commit 1 e o commit 2. Isto acontece porque nós temos 2 modificações no info.json, o 1ª commit que é feito na outra branch e o 2ª commit que é feito nesta branch, exemplo: O calc.exe não existia na outra branch e nem nesta branch, então ele precisaria realizar o commit na outra branch do calc.exe, realizar o merge e depois efetuar o commit do arquivo untracked calc.exe da branch main, desta forma nós temos 2 commits automaticos do GitDocker, enquanto que a pasta .vscode só foi alterada uma vez, então ela só contem 1 commit automatico.
+
+Vamos analisar o histórico de todos os nossos commits criados até aqui com o GitDocker, ao total foram 21 commits, incluindo as 6 branchs criadas, então clique no canto direito do repositório:
+
+<img src="https://imgur.com/NdO2X0o.png" alt="Total de commits">
+
 
 
 <a name="colab"></a>
