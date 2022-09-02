@@ -474,14 +474,63 @@ O comando `@branch` espera um valor, que é uma String colocada após o comando.
 
 Assim como nos comandos `@commit` e `@description`, o comando `@branch` só é possível processar uma única vez em cada execução, isto é, a cada execução do GitDocker que possuir um novo commit ativo pra ser processado após o comando branch, para processar vários novos comandos consecutivos, basta inserir um novo parâmetro CLI da versão 0.2.4 que é a **--recursive**. Este parâmetro é inserido após o nome de arquivo na execução do parâmetro **--init** e serve para processar de forma recursiva o executável do GitDocker dentro do próprio GitDocker, desta forma é possível efetuar todos os novos commits, descriptions e branchs, ignorando aqueles que já foram criados. Após commitar/descrever as alterações na versão atual do seu software (branch atual), o GitDocker realiza o git push automaticamente, enviando ao repositório do GitHub as suas novas modificações, incluindo a sua nova branch. A partir de agora veremos como commitar alterações em cima da branch main e de outras novas:
 
-1. modifique seu arquivo **sistema.gitdock** com o seguinte trecho:
+1. Primeiramente, crie um novo repositório no GitHub no botão abaixo:
 
-<img src="" alt="Utilizando o comando branch">
+<img src="" alt="Criando um repositório">
 
-2. Execute o comando **gitdocker --init sistema.gitdock** e veja o resultado:
+2. Na tela que irá aparecer, dê um nome ao repositório, insira uma descrição, marque como público ou privado e adicione um README:
 
-<img src="" alt="Resultado do comando branch">
+<img src="" alt="Colocando nome no repositório">
 
+3. Role a página e Clique no botão **Create repository** para criar o repositório:
+
+<img src="" alt="Criando um repositório pelo botão">
+
+4. Perceba que nós temos nossa descrição no README, um botão de **Add File** para adicionar arquivos no próprio GitHub, o **Code** para clonar o repositório e apontado pelas setas vermelhas, o nome da nossa branch **main**, na outra seta aponta a quantidade de branchs que é **1 branch**, esta é a branch principal onde vai nossos arquivos de código-fonte principais mais atualizados:
+
+<img src="" alt="Visual do repositório main">
+
+<a name="step5"></a>
+5. Clique no botão **Code** e irá aparecer 2 links disponíveis, o **HTTPS** e o **SSH**, poderá escolher qualquer um dos links, porém só escolha SSH se tiver configurado a chave SSH na sua máquina. Vamos escolher o link **HTTPS** que abre como padrão, clique no botão apontado pela outra seta vermelha para copiar o link:
+
+<img src="" alt="Link para clonar repositório">
+
+6. Antes de tudo, certifique-se que você baixou e instalou a ferramenta **git** [clicando aqui](https://git-scm.com/downloads). Atualmente na data da escrita desta documentação o git está na versão 2.37.3 que contém novos recursos, incluindo a execução dos comandos git pelo **prompt de comando**, isto é o que nos possibilita executar os comandos git dentro do código-fonte do GitDocker, então não se esqueça de marcar esta opção quando tiver instalando o git. Em qualquer diretório, execute o **Git Bash** para abrir o terminal do git, porém decidi abrir no **Disco Local C:** clicando com o botão direito do mouse sobre a pasta do disco local C: e clicando em **Git Bash Here**:
+
+<img src="" alt="Abrindo o Git Bash">
+
+7. Após abrir a tela do Terminal, digite o comando **git clone link-do-seu-repositorio.git** para clonar o seu repositório. Substitua o **link-do-seu-repositorio.git** pelo link HTTPS que você copiou no <a href="#step5">passo 5</a>, após digitar o comando e colar o link, dê enter e aparecerá estas informações:
+
+<img src="" alt="Clonando o repositório pelo link HTTPS">
+
+8. Se aparecer estas informações significa que acabamos de baixar a pasta do nosso repositório para o Disco Local C: e inicializar o git nela. No nosso caso, clonamos o repositório **branch_doc** onde faremos os testes do GitDocker:
+
+<img src="" alt="Pasta do branch_doc no disco local C">
+
+<a name="step9"></a>
+9. Perceba que nós temos também uma pasta chamada **gitd** que está o executável do GitDocker, certifique-se de criar esta pasta no Disco Local C: e executar o **Build.bat** para compilar o projeto do GitDocker para esta pasta, também configure nas **variáveis de ambiente** nas variaveis de sistema **path** (se você tiver utilizando a plataforma Windows) o seguinte caminho **C:\gitd\**:
+
+<img src="" alt="Variaveis de ambiente do GitDocker">
+
+10. Porém, isto se você tiver clonando o repositório do GitDocker, mas o instalador do GitDocker feito em outras versões fará isso automaticamente. Então abra a pasta do repositório que você clonou, no nosso caso o **branch_doc** apontado pelo <a href="#step9">passo 9</a> e insira 2 pastas neste diretório: A pasta **configs** que terá o arquivo **config.json** e a pasta **infos** que terá o arquivo **info.json** Estas 2 pastas com estes arquivos estão no repositório do GitDocker que você provavelmente já clonou pra sua máquina, apenas copie-os e cole-os dentro de **branch_doc**:
+
+<img src="" alt="Pasta configs e infos do GitDocker">
+
+11. Inicialmente os arquivos estarão configurados desta maneira:
+
+### Arquivo config.json
+
+<img src="" alt="Arquivo config.json">
+
+### Arquivo info.json
+
+<img src="" alt="Arquivo info.json">
+
+O arquivo **config.json** é para configurações de extensões aceitas pelo GitDocker, no qual você poderia inserir manualmente novas extensões ou executando o parâmetro CLI --config, que poderá ser apresentado em outras sessões (Na data que você estiver lendo esta documentação, este arquivo pode ter mudado, contendo novos valores) e o arquivo **info.json** com informações de versões, commits, descrições, branchs criadas e dados para merge. O info.json é de fato o arquivo que será constantemente lido e escrito pelo software GitDocker durante as operações de comandos e este arquivo definitivamente será uma parte do seu projeto de software (Exceto o config.json em outras versões que fará parte do GitDocker), o info.json também poderá ser integrado como uma API para outras versões.
+
+12. Crie um arquivo de qualquer nome ou extensão (desde que esteja configurada no config.json) na pasta que você clonou. Vamos criar um projeto simples em linguagem C++ para testar os comandos branch, commit e description, então criaremos um arquivo chamado **main.cpp** no editor VSCode:
+
+<img src="" alt="Projeto em Linguagem C++">
 
 
 
