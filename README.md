@@ -476,64 +476,99 @@ Assim como nos comandos `@commit` e `@description`, o comando `@branch` só é p
 
 1. Primeiramente, crie um novo repositório no GitHub no botão abaixo:
 
-<img src="" alt="Criando um repositório">
+<img src="https://imgur.com/nWwWTUe.png" alt="Criando um repositório">
 
 2. Na tela que irá aparecer, dê um nome ao repositório, insira uma descrição, marque como público ou privado e adicione um README:
 
-<img src="" alt="Colocando nome no repositório">
+<img src="https://imgur.com/RQaFDDr.png" alt="Colocando nome no repositório">
 
 3. Role a página e Clique no botão **Create repository** para criar o repositório:
 
-<img src="" alt="Criando um repositório pelo botão">
+<img src="https://imgur.com/g57FazR.png" alt="Criando um repositório pelo botão">
 
 4. Perceba que nós temos nossa descrição no README, um botão de **Add File** para adicionar arquivos no próprio GitHub, o **Code** para clonar o repositório e apontado pelas setas vermelhas, o nome da nossa branch **main**, na outra seta aponta a quantidade de branchs que é **1 branch**, esta é a branch principal onde vai nossos arquivos de código-fonte principais mais atualizados:
 
-<img src="" alt="Visual do repositório main">
+<img src="https://imgur.com/vZbevTT.png" alt="Visual do repositório main">
 
 <a name="step5"></a>
 5. Clique no botão **Code** e irá aparecer 2 links disponíveis, o **HTTPS** e o **SSH**, poderá escolher qualquer um dos links, porém só escolha SSH se tiver configurado a chave SSH na sua máquina. Vamos escolher o link **HTTPS** que abre como padrão, clique no botão apontado pela outra seta vermelha para copiar o link:
 
-<img src="" alt="Link para clonar repositório">
+<img src="https://imgur.com/WeyTxgt.png" alt="Link para clonar repositório">
 
 6. Antes de tudo, certifique-se que você baixou e instalou a ferramenta **git** [clicando aqui](https://git-scm.com/downloads). Atualmente na data da escrita desta documentação o git está na versão 2.37.3 que contém novos recursos, incluindo a execução dos comandos git pelo **prompt de comando**, isto é o que nos possibilita executar os comandos git dentro do código-fonte do GitDocker, então não se esqueça de marcar esta opção quando tiver instalando o git. Em qualquer diretório, execute o **Git Bash** para abrir o terminal do git, porém decidi abrir no **Disco Local C:** clicando com o botão direito do mouse sobre a pasta do disco local C: e clicando em **Git Bash Here**:
 
-<img src="" alt="Abrindo o Git Bash">
+<img src="https://imgur.com/SaNpYWB.png" alt="Abrindo o Git Bash">
 
 7. Após abrir a tela do Terminal, digite o comando **git clone link-do-seu-repositorio.git** para clonar o seu repositório. Substitua o **link-do-seu-repositorio.git** pelo link HTTPS que você copiou no <a href="#step5">passo 5</a>, após digitar o comando e colar o link, dê enter e aparecerá estas informações:
 
-<img src="" alt="Clonando o repositório pelo link HTTPS">
+<img src="https://imgur.com/iMivqtY.png" alt="Clonando o repositório pelo link HTTPS">
 
 8. Se aparecer estas informações significa que acabamos de baixar a pasta do nosso repositório para o Disco Local C: e inicializar o git nela. No nosso caso, clonamos o repositório **branch_doc** onde faremos os testes do GitDocker:
 
-<img src="" alt="Pasta do branch_doc no disco local C">
+<img src="https://imgur.com/ue8w93S.png" alt="Pasta do branch_doc no disco local C">
 
 <a name="step9"></a>
 9. Perceba que nós temos também uma pasta chamada **gitd** que está o executável do GitDocker, certifique-se de criar esta pasta no Disco Local C: e executar o **Build.bat** para compilar o projeto do GitDocker para esta pasta, também configure nas **variáveis de ambiente** nas variaveis de sistema **path** (se você tiver utilizando a plataforma Windows) o seguinte caminho **C:\gitd\**:
 
-<img src="" alt="Variaveis de ambiente do GitDocker">
+<img src="https://imgur.com/nFWw4KG.png" alt="Variaveis de ambiente do GitDocker">
 
 10. Porém, isto se você tiver clonando o repositório do GitDocker, mas o instalador do GitDocker feito em outras versões fará isso automaticamente. Então abra a pasta do repositório que você clonou, no nosso caso o **branch_doc** apontado pelo <a href="#step9">passo 9</a> e insira 2 pastas neste diretório: A pasta **configs** que terá o arquivo **config.json** e a pasta **infos** que terá o arquivo **info.json** Estas 2 pastas com estes arquivos estão no repositório do GitDocker que você provavelmente já clonou pra sua máquina, apenas copie-os e cole-os dentro de **branch_doc**:
 
-<img src="" alt="Pasta configs e infos do GitDocker">
+<img src="https://imgur.com/8cvayx9.png" alt="Pasta configs e infos do GitDocker">
 
 11. Inicialmente os arquivos estarão configurados desta maneira:
 
 ### Arquivo config.json
 
-<img src="" alt="Arquivo config.json">
+<img src="https://imgur.com/FrO2NTh.png" alt="Arquivo config.json">
 
 ### Arquivo info.json
 
-<img src="" alt="Arquivo info.json">
+<img src="https://imgur.com/Fg3Jaq5.png" alt="Arquivo info.json">
 
 O arquivo **config.json** é para configurações de extensões aceitas pelo GitDocker, no qual você poderia inserir manualmente novas extensões ou executando o parâmetro CLI --config, que poderá ser apresentado em outras sessões (Na data que você estiver lendo esta documentação, este arquivo pode ter mudado, contendo novos valores) e o arquivo **info.json** com informações de versões, commits, descrições, branchs criadas e dados para merge. O info.json é de fato o arquivo que será constantemente lido e escrito pelo software GitDocker durante as operações de comandos e este arquivo definitivamente será uma parte do seu projeto de software (Exceto o config.json em outras versões que fará parte do GitDocker), o info.json também poderá ser integrado como uma API para outras versões.
 
 12. Crie um arquivo de qualquer nome ou extensão (desde que esteja configurada no config.json) na pasta que você clonou. Vamos criar um projeto simples em linguagem C++ para testar os comandos branch, commit e description, então criaremos um arquivo chamado **main.cpp** no editor VSCode:
 
-<img src="" alt="Projeto em Linguagem C++">
+<img src="https://imgur.com/LUJsmNn.png" alt="Projeto em Linguagem C++">
 
+A partir daqui, vamos começar a desenvolver nossas funções, documentando-as e versionando-as usando o GitDocker. Criaremos um projeto simples de calculadora pra ser executado no CMD. Vamos dividir nosso desenvolvimento em etapas começando da versão 0.0 e a cada função, aumentaremos o número **menor** ou _minor_ que é o 2ª número, quando nosso sisteminha estiver pronto, zeramos o minor e aumentamos o número **maior** ou _major_ que é o 1ª número. Estes números de versão vamos inserir no nome de toda branch após o nome **calc**. Em outras sessões em versões futuras do GitDocker falaremos mais sobre a **versão semântica** e como ela vai funcionar no GitDocker utilizando outros comandos.
 
+Agora vamos adicionar entre a abertura e fechadura do **comentário de bloco** alguns dados pra descrever nosso software, começando por **Autor**, **Data** e **Programa** com uma descrição simples:
 
+<img src="https://imgur.com/KKiGAd2.png" alt="Descrição inicial do software">
+
+Lembrando que estas descrições não são comandos portanto não influencia no GitDocker no entanto futuramente terão outros comandos para descrever melhor o software, inserir números de versões e data de compilação. Antes de tudo, execute um `git add *` e `git commit -m "Salvando untrackeds"`, pois nesta versão atual durante a escrita desta documentação há um problema pra ser resolvido com arquivos untrackeds, então abra seu terminal CMD ou Bash no VSCode e digite os comandos do git:
+
+<img src="https://imgur.com/Zf12GXx.png" alt="Salvando untrackeds">
+
+Optei por utilizar o Bash do VSCode porque ele mostra o nome da branch atual acima da linha de comando e ainda aceita a coloração das informações do GitDocker (O que não acontece com o Git Bash fora do VSCode, mas aceita no CMD fora do VSCode também), ainda não vou executar o git push para atualizar o repositório remoto, vou deixar que o próprio GitDocker faça isto pra gente. Como inicialmente vamos trabalhar com a branch main, vamos inserir ela abaixo das descrições juntamente com o comando de commit e description, que será antes da nossa função principal **main()** em C++:
+
+<img src="https://imgur.com/jZeTqHR.png" alt="Utilizando branch, commit e description">
+
+Inserimos o comando `@branch` com o nome **main** após o comando, um commit e uma description. Note que nosso commit e description está totalmente de acordo com o que realmente estamos fazendo que é criar uma função main() vazia, onde será um código principal para chamada de outras funções. Inicialmente ainda não vamos compilar o projeto, apenas executamos o GitDocker via linha de comando para processar os comandos acima. 
+
+Como pode ver na imagem abaixo, o nosso arquivo main.cpp está no estado de modificado, então podemos efetuar as operações sem problema:
+
+<img src="https://imgur.com/ew2PRSb.png" alt="Estado de modificado do main.cpp">
+
+A branch main será gerada no **info.json** e vai verificar se algum commit está sendo efetuado (que no caso está), caso sim, ele efetua o commit nesta branch e realiza o git push para subir remotamente para a branch clonada, então na linha de comando digite **gitdocker --init main.cpp** e veja o resultado:
+
+<img src="https://imgur.com/P6wmq6K.png" alt="Executando o GitDocker para main.cpp">
+
+Ele apresenta os logs de informações do commit e description em verde e também o log de informação do comando `@branch` dizendo que a branch main foi criada, porém o próprio git identifica como **Fatal Error** pois não é possível criar uma branch que já está criada, como a própria main. No entanto, ignore esta mensagem se tiver executando nesta mesma data, pois isto será corrigido em outras versões do GitDocker. Então, as informações sendo escritas de cor branca são as do próprio git, efetuando o commit pelo comando `@commit` e subindo o projeto pro GitHub através do **git push**.
+
+Digite **git status** pra verificar os estados dos arquivos:
+
+<img src="https://imgur.com/I2l7PSG.png" alt="Branch up-to-date">
+
+Não contém nenhum arquivo modificado e a branch main do repositório local está **up-to-date**, isto é, atualizado com o repositório remoto de **origin/main**. Agora veremos no repositório remoto do GitHub os nossos arquivos e commits:
+
+<img src="https://imgur.com/CwKNHzB.png" alt="Arquivos no repositório remoto">
+
+Teremos o nosso commit **Insere funcao main() vazia** e a descrição quando apontado a seta do mouse para a mensagem de commit, contendo a mesma descrição que colocamos no comando `@description`. Também teremos o commit **Salvando Untrackeds** que atualmente está na pasta **Configs**, porém ela também estava na pasta **Infos**, porém um segundo commit **substituiu** a mensagem "Salvando Untrackeds" da pasta Infos, este segundo commit é o **Commit automatico do GitDocker** que no final efetua este commit pois após os commits do usuário (Feitos pelo comando `@commit`), o arquivo **info.json** ainda é alterado pelo GitDocker, então para ser possível o envio remoto pelo git push, é preciso efetuar um último commit automatico, pra deixar tudo em ordem. Atualmente existem 2 commits automaticos no software GitDocker, porém estamos vendo apenas 1 na tela.
+
+De agora em diante, veremos a criação das próximas funções, onde cada branch será uma nova versão contendo a nova função.
 
 <a name="colab"></a>
 ## Colaborações
