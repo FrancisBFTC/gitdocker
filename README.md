@@ -753,7 +753,13 @@ Vamos analisar o histórico de todos os nossos commits criados até aqui com o G
 
 <img src="https://imgur.com/NdO2X0o.png" alt="Total de commits">
 
+E agora observaremos todo o histórico de commits, começando pelo commit inicial (A criação do README) até o merge da última versão do calc-1.0 para o main:
 
+<img src="https://imgur.com/YwMNoQA.png" alt="Histórico de commits">
+
+Destas 21 commits, pode observar que temos os nomes de cada um e opções no lado direito: O símbolo **< >** é para navegar ao repositório que foi commitado neste ponto do histórico, onde você verá os arquivos e seus commits; As **hashes** no centro é para **Visualizar detalhes do commit** onde você verá quais as linhas que foram modificadas, acrescentadas ou apagadas naquele commit e também em quais arquivos afetados e o último símbolo de 2 quadrados sobrepostos é para copiar a hash de criptografia SHA, no qual seria o dado de integridade dos arquivos.
+
+Nesta sessão foi explicada através de um projetinho de calculadora C++ como utilizar o comando `@branch` em conjunto com os comandos `@commit` e `@description`, assim você organizar mais o desenvolvimento de seus projetos e documentá-los no próprio código-fonte. É claro que em versões posteriores do GitDocker teremos comandos para **controle de versão semântica** automatizando ainda mais os incrementos de números de versão seguindo regras pré-configuradas no **config.json** e armazenando em **info.json**, para isto na versão 0.3.0 será concluída o parâmetro --config a fim de configurar as extensões e regras o config.json.
 
 <a name="colab"></a>
 ## Colaborações
