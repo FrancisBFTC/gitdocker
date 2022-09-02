@@ -615,6 +615,37 @@ E no nosso repositório atualizado, temos nossos arquivos commitados na branch c
 
 <img src="https://imgur.com/8WIQnlW.png" alt="Repositorio remoto em calc-0.2">
 
+Agora vamos fazer algo um pouco diferente, tentaremos criar 2 funções de uma vez só numa única modificação, porém sendo em branchs diferentes: O **calc-0.3** e o **calc-0.4**, cada branch contendo uma função aritmética, o Mul_Num() para multiplicar e o Div_Num para dividir, respectivamente. Seguimos os mesmos padrões dos outros commits, criando mensagens objetivas do que está sendo feita para cada uma:
+
+<img src="https://imgur.com/3WQ4xBm.png" alt="Criando 2 funções: Mul_Num() e Div_Num()">
+
+Sabemos que os comandos `@branch`, `@commit` e `@description` executa apenas uma vez a cada modificação, isso significa que se você modificou o arquivo, mesmo adicionando 2 funções, isso será commitado apenas 1 vez, justamente porque as 2 funções irão subir junto com este único commit, no entanto queremos descrever para cada função uma mensagem dentro de uma branch específica para ela, para isto foi criado o parâmetro **--recursive** que é abordado seu funcionamento com mais detalhes <a href="#recursive">nesta sessão</a>. O --recursive, permite que o GitDocker execute recursivamente ele mesmo, com a mesma linha de comando anterior porém automaticamente modificando o arquivo sendo lido a cada execução para assim ser possível efetuar o commit, já que só é possível realizar um commit quando um arquivo é modificado. Então se temos 2 branchs e commits disponíveis, logo serão 2 execuções recursivas, veja as 2 **inicializações do projeto** criando as 2 branchs:
+
+<img src="https://imgur.com/9bOkenu.png" alt="Execução recursiva 1 do GitDocker">
+<img src="https://imgur.com/XrtgcP8.png" alt="Execução recursiva 2 do GitDocker">
+
+Ele realiza o commit da 1ª mensagem da função Mul_Num() e dar o aviso dizendo que a 2ª mensagem, isto é, da função Div_Num(), será realizada no próximo commit, após isto cria a nossa branch calc-0.3 e atualiza o repositório com git push. Então ele reinicializa o projeto e é mostrado mensagens de informações que as outras mensagens de commits já existem, logo elas são ignoradas e o commit de Div_Num() que ficou pendente, é agora realizado para a branch calc-0.4. Se vermos na imagem abaixo, temos 2 telas amarelas apresentando solicitando um Pull Request e dizendo que as 2 branchs foram efetuadas no mesmo minuto, ou seja, a 14 minutos atrás:
+
+<img src="https://imgur.com/7ij5Y4r.png" alt="Resultado no repositório da execução recursiva">
+
+Podemos ver que também temos uma lista de branchs no lado esquerdo da branch main até a branch calc-0.4. Executando o git log, percebemos que o intervalo de tempo entre o commit e push da função Mul_Num() e Div_Num() é de 4 segundos, isso significa que o GitDocker levou um tempo de 4 segundos para criar 2 branchs, efetuar os commits e descriptions em cada uma e subir para o repositório remoto cada branch modificada, algo que poderíamos levar uma média de um pouco mais de 1 minuto para fazer isto manualmente pelo Git Bash.
+
+<img src="https://imgur.com/8mXBYk8.png" alt="git log da funcao Mul_Num()">
+<img src="https://imgur.com/5HkZAVM.png" alt="git log da funcao Div_Num()">
+
+E checando nos repositórios remotos, nós temos as branchs calc-0.3 e calc-0.4:
+
+### Branch calc-0.3:
+
+<img src="https://imgur.com/oU36jvX.png" alt="branch remoto do calc-0.3">
+
+### Branch calc-0.4:
+
+<img src="https://imgur.com/AeuU3Ed.png" alt="branch remoto do calc-0.4">
+
+Agora implementaremos a última versão do nosso projeto que é a chamada das 4 funções na função principal main() pegando o dado do usuário no CMD e calculando usando as funções, também vamos compilar com g++.exe nosso executável e envia para o repositório remoto as últimas modificações, então no código da função principal faça o seguinte:
+
+<img src="" alt="Codigo na função principal main()">
 
 
 <a name="colab"></a>
