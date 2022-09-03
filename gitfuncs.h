@@ -59,6 +59,8 @@ void commitCommand(char *);
 void descriptionCommand(char *);
 void runCommit(bool);
 void branchCommand();
+void mergeExecute();
+void configExecute(char*);
 
 // Variáveis Booleanas para comandos e leitura
 bool reading_init = false;
@@ -79,6 +81,11 @@ bool untracked = false;
 bool is_modified = false;
 
 bool recursive = false;
+bool param_ext = false;
+bool param_patch = false;
+bool param_major = false;
+bool param_minor = false;
+bool rules_arg = false;
 
 // Variáveis inteiras para contadores
 int count_path = 0;
@@ -103,6 +110,10 @@ stringstream conc;
 string file_mod;
 string branch_str = "main";
 string branchname;
+
+string major_str;
+string minor_str;
+string patch_str;
 
 // Variáveis do Windows
 HANDLE color;
@@ -259,6 +270,86 @@ void printJSONConfig(){
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 }
 
+void configExecute(char *arg){
+	std::ifstream con("C:/gitd/configs/config.json");
+	config = json::parse(con);
+
+	if(config[arg].size() != 0){
+
+		if(strcmp(arg, "RULES") == 0){
+			if(rules_arg){
+				bool has_param = false;
+
+				cout << endl;
+			
+				if(param_major){
+					config[arg]["max_major"] = major_str.c_str();
+					writeJSONFile("C:/gitd/configs/config.json", config);
+
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "O dado '" << major_str << "' da chave 'max_major' foi configurado com sucesso!" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+					has_param = true;
+				}
+
+				if(param_minor){
+					config[arg]["max_minor"] = minor_str.c_str();
+					writeJSONFile("C:/gitd/configs/config.json", config);
+
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "O dado '" << minor_str << "' da chave 'max_minor' foi configurado com sucesso!" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+					has_param = true;
+				}
+
+				if(param_patch){
+					config[arg]["max_patch"] = patch_str.c_str();
+					writeJSONFile("C:/gitd/configs/config.json", config);
+
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "O dado '" << patch_str << "' da chave 'max_patch' foi configurado com sucesso!" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+					has_param = true;
+				}
+			
+				if(!has_param){
+					SetConsoleTextAttribute(color, LIGHT_RED);
+					std::cout << "\nO parametro inserido e invalido!" << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+				}
+
+			}else{
+				cout << "\nInsira dados numericos sem aspas ou apenas o valor none" << endl;
+				cout << "\nMajor maximo = ";
+				cin >> major_str;
+				cout << "Minor maximo = ";
+				cin >> minor_str;
+				cout << "Patch maximo = ";
+				cin >> patch_str;
+
+				config[arg]["max_major"] = major_str.c_str();
+				config[arg]["max_minor"] = minor_str.c_str();
+				config[arg]["max_patch"] = patch_str.c_str();
+
+				writeJSONFile("C:/gitd/configs/config.json", config);
+
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "\nTodos os dados de 'RULES' foi configurado com sucesso!" << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+			}
+		}else{
+			if(strcmp(arg, "EXTENSIONS") == 0){
+				
+			}
+		}
+
+	}else{
+		SetConsoleTextAttribute(color, LIGHT_RED);
+		std::cout << "\nEste valor '" << arg << "' nao e valido!" << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+	}
+}
+
 void searchJSONValues(char *specified){
 	std::ifstream f("C:/gitd/configs/config.json");
 	json data = json::parse(f);
@@ -348,23 +439,31 @@ void initProjectRead(char *source){
 			if(contain_branch){
 				string git_push;
 				system("git add *");
-				system("git commit -m \"Gitdocker auto-commit 1\" >> C:\\gitd\\log_commit");
+				system("git commit -m \"Gitdocker auto-commit 1\" >> C:/gitd/logs/log_commit");
 
 				if(switched){
 					stringstream branch_conc, merge_conc;
-					branch_conc << "git checkout --quiet " << branchname << " >> C:\\gitd\\log_checkout";
+					branch_conc << "git checkout --quiet " << branchname << " >> C:/gitd/logs/log_checkout";
 					string git_checkout = branch_conc.str();
 					
 					system(git_checkout.c_str());
 						
 					system("git add *");
-					system("git commit -m \"Gitdocker auto-commit 2\" >> C:\\gitd\\log_commit");
+					system("git commit -m \"Gitdocker auto-commit 2\" >> C:/gitd/logs/log_commit");
 						
 				}
-			
+
+				SetConsoleTextAttribute(color, LIGHT_CYAN);
+				std::cout << "@branch ";
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				std::cout << "log: ";
+				SetConsoleTextAttribute(color, LIGHT_GREEN);
+				std::cout << "Atualizando repositorio remoto para branch '" << branchname << "'..." << endl;
+				SetConsoleTextAttribute(color, LIGHT_WHITE);
+
 				stringstream push_conc;
 				string origin = branchname;
-				push_conc << "git push --quiet origin " << origin;
+				push_conc << "git push --quiet origin " << origin << " --quiet >> C:/gitd/logs/log_push";
 				git_push = push_conc.str();
 
 				system(git_push.c_str());
@@ -383,7 +482,7 @@ void initProjectRead(char *source){
 					system(command.c_str());
 
 					system("git add *");
-					system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit nao foi efetuado pelo usuario.\" >> C:\\gitd\\log_commit");
+					system("git commit -m \"Gitdocker auto-commit 1\" >> C:/gitd/logs/log_commit");
 				}
 			}			
 		}else{
@@ -398,8 +497,8 @@ void initProjectRead(char *source){
 
 void checkStateFiles(){
 		paths["modifieds"].clear();
-		system("git status > C:\\gitd\\log_status");
-		FILE *file_status = fopen("C:\\gitd\\log_status", "r");
+		system("git status > C:/gitd/logs/log_status");
+		FILE *file_status = fopen("C:/gitd/logs/log_status", "r");
 		if(file_status != NULL){
 			char line_status[500];
 			int count_mod = 0;
@@ -537,7 +636,7 @@ void branchCommand(){
 	
 	if(!exist_branch){
 		stringstream branch_conc;
-		branch_conc << "git checkout -b " << branchname << " >> C:\\gitd\\log_checkout";
+		branch_conc << "git checkout --quiet -b " << branchname << " >> C:/gitd/logs/log_checkout";
 		git_checkout = branch_conc.str();
 
 		info["INFOS"]["branchs"][count_branch] = branchname.c_str();
@@ -575,13 +674,52 @@ void branchCommand(){
 
 }
 
+void mergeExecute(){
+	std::ifstream f("infos/info.json");
+	json infom = json::parse(f);
+
+	string oldbranch = infom["INFOS"]["merge"][0];
+	string newbranch = infom["INFOS"]["merge"][1];
+
+	SetConsoleTextAttribute(color, LIGHT_CYAN);
+	std::cout << "--merge ";
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+	std::cout << "log: ";
+	SetConsoleTextAttribute(color, LIGHT_GREEN);
+	std::cout << "Realizando o merging de '" << newbranch << "' com '" << oldbranch << "'..." << endl;
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+	stringstream merge_conc;
+	merge_conc << "git merge " << newbranch << " " << oldbranch << " -X theirs >> C:/gitd/logs/log_merge";
+	system(merge_conc.str().c_str());
+			
+	string currently = infom["INFOS"]["merge"][1];
+	infom["INFOS"]["merge"][0] = currently.c_str();
+	writeJSONFile("infos/info.json", infom);
+
+	system("git add *");
+	system("git commit -m \"Gitdocker auto-commit 3\" >> C:/gitd/logs/log_commit");
+
+	SetConsoleTextAttribute(color, LIGHT_CYAN);
+	std::cout << "--merge ";
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+	std::cout << "log: ";
+	SetConsoleTextAttribute(color, LIGHT_GREEN);
+	std::cout << "Atualizando repositorio remoto para branch '" << branchname << "'..." << endl;
+	SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+	stringstream push_conc;
+	push_conc << "git push --quiet origin " << newbranch << " --quiet >> C:/gitd/logs/log_push";
+	system(push_conc.str().c_str());	
+}
+
 // @description Função do comando commit para mensagens de commit
 void commitCommand(char *line){
 	 string msgCommand = getString(line, "@commit");
 
 	last_commited = false;
-	if(!commited){
 
+	if(!commited){
 		bool exist_commit = false;
 		count_commit = info["INFOS"]["commits"].size();
 		for(int i = 0; i < count_commit; i++)
@@ -623,19 +761,34 @@ void commitCommand(char *line){
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			std::cout << "log: INFO => ";
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "A mensagem '" << msgCommand << "' ja existe!" << endl;
+			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada." << endl;
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 		}
 
 	}else{
-		SetConsoleTextAttribute(color, LIGHT_CYAN);
-		std::cout << "@commit ";
-		SetConsoleTextAttribute(color, LIGHT_WHITE);
-		std::cout << "log: AVISO => ";
-		SetConsoleTextAttribute(color, DARK_YELLOW);
-		std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!" << endl;
-		SetConsoleTextAttribute(color, LIGHT_WHITE);
-		count_recursive++;
+		bool exist_commit = false;
+		for(int i = 0; i < count_commit; i++)
+			if(info["INFOS"]["commits"][i]["msg"] == msgCommand.c_str())
+				exist_commit = true;
+
+		if(exist_commit){
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@commit ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: INFO => ";
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada." << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+		}else{
+			SetConsoleTextAttribute(color, LIGHT_CYAN);
+			std::cout << "@commit ";
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			std::cout << "log: AVISO => ";
+			SetConsoleTextAttribute(color, DARK_YELLOW);
+			std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+			count_recursive++;
+		}
 	}
 	
 }
@@ -859,10 +1012,18 @@ void runCommit(bool is_read){
 			git_commit_conc << " -m \"" << "* " << msgDescription << "\"";
 		}
 		
-		git_commit_conc << " >> C:\\gitd\\log_commit";
+		git_commit_conc << " >> C:/gitd/logs/log_commit";
 
 		string git_commit = git_commit_conc.str();
 		
+		SetConsoleTextAttribute(color, LIGHT_CYAN);
+		std::cout << "@commit ";
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+		std::cout << "log: ";
+		SetConsoleTextAttribute(color, LIGHT_GREEN);
+		std::cout << "O ultimo commit adicionado esta sendo realizado..." << endl;
+		SetConsoleTextAttribute(color, LIGHT_WHITE);
+
 		system(git_add.c_str());
 		system(git_commit.c_str());
 	}
