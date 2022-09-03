@@ -88,13 +88,11 @@ int count_commit = 0;
 int count_descr = 0;
 int count_recursive = 0;
 int count_branch = 0;
-int index_branch = 0;
 
 // Objetos JSON
 json config;
 json paths;
 json info;
-json branchs;
 
 // Variáveis Strings
 string line_comment;
@@ -222,7 +220,7 @@ string replace_all(string s, string x, string y){
 
 // @description Função pra imprimir dados da config JSON
 void printJSONConfig(){
-		std::ifstream f("configs/config.json");
+		std::ifstream f("C:/gitd/configs/config.json");
 		json data = json::parse(f);
 			
 		SetConsoleTextAttribute(color, LIGHT_PINK);
@@ -262,7 +260,7 @@ void printJSONConfig(){
 }
 
 void searchJSONValues(char *specified){
-	std::ifstream f("configs/config.json");
+	std::ifstream f("C:/gitd/configs/config.json");
 	json data = json::parse(f);
 
 	//string speficied = toString(value);
@@ -319,8 +317,9 @@ void initProjectRead(char *source){
 		char *ext = (char*) malloc(strlen(source));
 		substring(ext, source, indexOf(source, "."), strlen(source));
 		
-		std::ifstream con("configs/config.json");
+		std::ifstream con("C:/gitd/configs/config.json");
 		config = json::parse(con);
+		
 
 		std::ifstream inf("infos/info.json");
 		info = json::parse(inf);
@@ -349,24 +348,23 @@ void initProjectRead(char *source){
 			if(contain_branch){
 				string git_push;
 				system("git add *");
-				system("git commit -m \"Commit automatico do GitDocker 1\" -m \"Este commit nao foi efetuado pelo usuario.\"");
+				system("git commit -m \"Gitdocker auto-commit 1\" >> C:\\gitd\\log_commit");
 
 				if(switched){
 					stringstream branch_conc, merge_conc;
-					branch_conc << "git checkout " << branchname;
+					branch_conc << "git checkout --quiet " << branchname << " >> C:\\gitd\\log_checkout";
 					string git_checkout = branch_conc.str();
-
-					system("git stash save \"Changes Saved\"");
+					
 					system(git_checkout.c_str());
 						
 					system("git add *");
-					system("git commit -m \"Commit automatico do GitDocker 2\" -m \"Este commit nao foi efetuado pelo usuario.\"");
+					system("git commit -m \"Gitdocker auto-commit 2\" >> C:\\gitd\\log_commit");
 						
 				}
 			
 				stringstream push_conc;
 				string origin = branchname;
-				push_conc << "git push origin " << origin;
+				push_conc << "git push --quiet origin " << origin;
 				git_push = push_conc.str();
 
 				system(git_push.c_str());
@@ -385,7 +383,7 @@ void initProjectRead(char *source){
 					system(command.c_str());
 
 					system("git add *");
-					system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit nao foi efetuado pelo usuario.\"");
+					system("git commit -m \"Commit automatico do GitDocker\" -m \"Este commit nao foi efetuado pelo usuario.\" >> C:\\gitd\\log_commit");
 				}
 			}			
 		}else{
@@ -400,8 +398,8 @@ void initProjectRead(char *source){
 
 void checkStateFiles(){
 		paths["modifieds"].clear();
-		system("git status > status.txt");
-		FILE *file_status = fopen("status.txt", "r");
+		system("git status > C:\\gitd\\log_status");
+		FILE *file_status = fopen("C:\\gitd\\log_status", "r");
 		if(file_status != NULL){
 			char line_status[500];
 			int count_mod = 0;
@@ -539,7 +537,7 @@ void branchCommand(){
 	
 	if(!exist_branch){
 		stringstream branch_conc;
-		branch_conc << "git checkout -b " << branchname;
+		branch_conc << "git checkout -b " << branchname << " >> C:\\gitd\\log_checkout";
 		git_checkout = branch_conc.str();
 
 		info["INFOS"]["branchs"][count_branch] = branchname.c_str();
@@ -860,9 +858,10 @@ void runCommit(bool is_read){
 			string msgDescription = info["INFOS"]["commits"][count_commit]["desc"][i];
 			git_commit_conc << " -m \"" << "* " << msgDescription << "\"";
 		}
+		
+		git_commit_conc << " >> C:\\gitd\\log_commit";
 
 		string git_commit = git_commit_conc.str();
-		cout << "Commit Command : " << git_commit << endl;
 		
 		system(git_add.c_str());
 		system(git_commit.c_str());
