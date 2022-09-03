@@ -319,6 +319,7 @@ void initProjectRead(char *source){
 		
 		std::ifstream con("C:/gitd/configs/config.json");
 		config = json::parse(con);
+		
 
 		std::ifstream inf("infos/info.json");
 		info = json::parse(inf);
