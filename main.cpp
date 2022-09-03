@@ -36,6 +36,8 @@ int main(int argc, char** argv) {
 
 			cli_file = argv[2];
 			initProjectRead(argv[2]);
+			if(switched)
+				system("gitdocker --merge");
 		}
 		
 		if(strcmp(argv[1], "--show-config") == 0 || strcmp(argv[1], "-sc") == 0){
@@ -79,15 +81,18 @@ int main(int argc, char** argv) {
 			string oldbranch = infom["INFOS"]["merge"][0];
 			string newbranch = infom["INFOS"]["merge"][1];
 			stringstream merge_conc;
-			merge_conc << "git merge " << newbranch << " " << oldbranch << " -X theirs";
+			merge_conc << "git merge " << newbranch << " " << oldbranch << " -X theirs >> C:\\gitd\\log_merge";
 			system(merge_conc.str().c_str());
 			
 			string currently = infom["INFOS"]["merge"][1];
 			infom["INFOS"]["merge"][0] = currently.c_str();
 			writeJSONFile("infos/info.json", infom);
 
+			system("git add *");
+			system("git commit -m \"Gitdocker auto-commit 3\" >> C:\\gitd\\log_commit");
+
 			stringstream push_conc;
-			push_conc << "git push origin " << newbranch;
+			push_conc << "git push --quiet origin " << newbranch;
 			system(push_conc.str().c_str());
 		}
 		
