@@ -44,9 +44,21 @@ int main(int argc, char** argv) {
 
 		if(strcmp(argv[1], "--config") == 0 || strcmp(argv[1], "-c") == 0){
 			if(argv[2] != NULL){
-				SetConsoleTextAttribute(color, LIGHT_GREEN);
-				std::cout << "\nConfigurando Projeto..." << endl;
-				SetConsoleTextAttribute(color, LIGHT_WHITE);
+				if(strcmp(argv[2], "RULES")){
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "\nConfigurando Regras de Versao..." << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+				}
+				if(strcmp(argv[2], "EXTENSIONS")){
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "\nConfigurando Extensoes..." << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+				}
+				if(strcmp(argv[2], "INIT")){
+					SetConsoleTextAttribute(color, LIGHT_GREEN);
+					std::cout << "\nConfigurando Inicializacao..." << endl;
+					SetConsoleTextAttribute(color, LIGHT_WHITE);
+				}
 
 				bool can_config = true;
 
@@ -94,6 +106,65 @@ int main(int argc, char** argv) {
 						}
 					}
 
+				}else{
+					if(strcmp(argv[2], "EXTENSIONS") == 0 && argc > 3){
+						exts_arg = true;
+						for(int i = 3; i < argc; i++){
+							if(strcmp(argv[i], "--lang") == 0 || strcmp(argv[i], "-l") == 0){
+								if(argv[i+1] != NULL){
+									param_lang = true;
+									lang_str = argv[i+1];
+								}else{
+									SetConsoleTextAttribute(color, LIGHT_RED);
+									std::cout << "\nO parametro " << argv[i] << " espera um valor!" << endl;
+									SetConsoleTextAttribute(color, LIGHT_WHITE);
+									can_config = false;
+									break;
+								}
+							}
+
+							if(strcmp(argv[i], "--reset") == 0 || strcmp(argv[i], "-re") == 0)
+								reset_ext = true;
+						}
+					}else{
+						if(strcmp(argv[2], "INIT") == 0 && argc > 3){
+							init_arg = true;
+
+							for(int i = 3; i < argc; i++){
+								if(strcmp(argv[i], "--dir") == 0 || strcmp(argv[i], "-d") == 0){
+									if(argv[i+1] != NULL){
+										param_dir = true;
+										dir_str = argv[i+1];
+									}else{
+										SetConsoleTextAttribute(color, LIGHT_RED);
+										std::cout << "\nO parametro " << argv[i] << " espera um valor!" << endl;
+										SetConsoleTextAttribute(color, LIGHT_WHITE);
+										can_config = false;
+										break;
+									}
+								}else{
+									if(strcmp(argv[i], "--ignore") == 0 || strcmp(argv[i], "-ig") == 0){
+										if(argv[i+1] != NULL){
+											param_ignore = true;
+											ignore_str = argv[i+1];
+										}else{
+											SetConsoleTextAttribute(color, LIGHT_RED);
+											std::cout << "\nO parametro " << argv[i] << " espera um valor!" << endl;
+											SetConsoleTextAttribute(color, LIGHT_WHITE);
+											can_config = false;
+											break;
+										}
+									}
+								}
+
+								if(strcmp(argv[i], "--reset") == 0 || strcmp(argv[i], "-re") == 0)
+									reset_ext = true;
+							}
+
+						}
+					}
+
+
 				}
 
 			if(can_config)
@@ -125,6 +196,18 @@ int main(int argc, char** argv) {
 
 		if(strcmp(argv[1], "--merge") == 0){
 			mergeExecute();
+		}
+
+		if(strcmp(argv[1], "--config-project") == 0 || strcmp(argv[1], "-cp") == 0){
+			SetConsoleTextAttribute(color, LIGHT_GREEN);
+			std::cout << "\nConfigurando Projeto...\n" << endl;
+			SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+			
+		}
+
+		if(strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0){
+			std::cout << "\nGitDocker v0.3.0 Build 202209\n" << endl;
 		}
 		
 	}else{

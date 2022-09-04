@@ -80,12 +80,18 @@ bool modified = false;
 bool untracked = false;
 bool is_modified = false;
 
+// Variaveis booleanas para parâmetros na CLI
 bool recursive = false;
-bool param_ext = false;
+bool param_lang = false;
 bool param_patch = false;
 bool param_major = false;
 bool param_minor = false;
+bool param_dir = false;
+bool param_ignore = false;
 bool rules_arg = false;
+bool exts_arg = false;
+bool init_arg = false;
+bool reset_ext = false;
 
 // Variáveis inteiras para contadores
 int count_path = 0;
@@ -111,9 +117,13 @@ string file_mod;
 string branch_str = "main";
 string branchname;
 
+// Variaveis Strings para parametros na CLI
 string major_str;
 string minor_str;
 string patch_str;
+string lang_str;
+string dir_str;
+string ignore_str;
 
 // Variáveis do Windows
 HANDLE color;
@@ -265,7 +275,25 @@ void printJSONConfig(){
 				cout << extensions["exts"][j] << ", ";
 			}
 			cout << endl;
-		}	
+		}
+
+		SetConsoleTextAttribute(color, LIGHT_PINK);
+		cout << "\nINICIALIZACAO => " << endl;
+
+		SetConsoleTextAttribute(color, DARK_BLUE2);
+		cout << "	Diretorio = ";
+		SetConsoleTextAttribute(color, DARK_YELLOW);
+		cout << data["INIT"]["dir"] << endl;
+
+		SetConsoleTextAttribute(color, DARK_BLUE2);
+		cout << "	Extensoes Ignoradas = ";
+		SetConsoleTextAttribute(color, DARK_YELLOW);
+
+		int length_ignore = data["INIT"]["ignore"].size();
+		for(int i = 0; i < length_ignore; i++)
+			cout << data["INIT"]["ignore"][i] << " ";
+
+		cout << endl << endl;
 			
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 }
@@ -339,7 +367,192 @@ void configExecute(char *arg){
 			}
 		}else{
 			if(strcmp(arg, "EXTENSIONS") == 0){
-				
+				if(exts_arg){
+					bool has_param = false;
+
+					cout << endl;
+
+					if(param_lang){
+						int index = stoi(lang_str);
+						int quant_ext = 0;
+						string ext_string;
+						if(index > 0){
+							if(reset_ext)
+								config["EXTENSIONS"]["lang"][index-1]["exts"].clear();
+
+							cout << "Insira extensoes com o '.' antes:" << endl;
+							cout << "\nQuantidade de extensoes = ";
+							cin >> quant_ext;
+							int next_index = config["EXTENSIONS"]["lang"][index-1]["exts"].size();
+							int total_ext = quant_ext + next_index;
+							for(int i = next_index; i < total_ext; i++){
+								cout << "extensao " << i+1 << " = ";
+								cin >> ext_string;
+								config["EXTENSIONS"]["lang"][index-1]["exts"][i] = ext_string.c_str();
+							}
+							
+							writeJSONFile("C:/gitd/configs/config.json", config);
+
+							SetConsoleTextAttribute(color, LIGHT_GREEN);
+							std::cout << endl << quant_ext << " extensoes foram adicionadas no conjunto " << index << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							
+
+						}else{
+							SetConsoleTextAttribute(color, LIGHT_RED);
+							std::cout << "O indice " << index << " e invalido!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+						}
+
+						has_param = true;
+					}
+
+					if(!has_param){
+						SetConsoleTextAttribute(color, LIGHT_RED);
+						std::cout << "\nO parametro inserido e invalido!" << endl;
+						SetConsoleTextAttribute(color, LIGHT_WHITE);
+					}
+				}else{
+					int quant_ext = 0;
+					int quant_com = 0;
+					string ext_string;
+
+					int next = config["EXTENSIONS"]["lang"].size();
+					cout << "Insira extensoes com o '.' antes:" << endl;
+					cout << "\nQuant. de extensoes = ";
+					cin >> quant_ext;
+					
+					if(quant_ext > 0){
+						cout << "Quant. de simbolos de comentarios = ";
+						cin >> quant_com;
+
+						if(quant_com >= 1 && quant_com <= 3){
+							for(int i = 0; i < quant_ext; i++){
+								cout << "extensao " << i+1 << " = ";
+								cin >> ext_string;
+								config["EXTENSIONS"]["lang"][next]["exts"][i] = ext_string.c_str();
+							}
+
+							switch(quant_com){
+								case 1:
+									for(int i = 0; i < quant_com; i++){
+										cout << "Comentario de linha/bloco = ";	
+										cin >> ext_string;
+										config["EXTENSIONS"]["lang"][next]["comments"][i] = ext_string.c_str();
+									}
+									break;
+								case 2:
+									for(int i = 0; i < quant_com; i++){
+										if(i == 0)
+											cout << "Comentario de bloco (abertura) = ";
+										if(i == 1)
+											cout << "Comentario de bloco (fechadura) = ";
+											
+										cin >> ext_string;
+										config["EXTENSIONS"]["lang"][next]["comments"][i] = ext_string.c_str();
+									}
+									break;
+								case 3:
+									for(int i = 0; i < quant_com; i++){
+										if(i == 0)
+											cout << "Comentario de linha = ";
+										if(i == 1)
+											cout << "Comentario de bloco (abertura) = ";
+										if(i == 2)
+											cout << "Comentario de bloco (fechadura) = ";
+											
+										cin >> ext_string;
+										config["EXTENSIONS"]["lang"][next]["comments"][i] = ext_string.c_str();
+									}
+									break;
+							}
+
+							writeJSONFile("C:/gitd/configs/config.json", config);
+
+							SetConsoleTextAttribute(color, LIGHT_GREEN);
+							std::cout << endl << "O conjunto " << next+1 << " de extensoes foi adicionado com sucesso!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+						}else{
+							SetConsoleTextAttribute(color, LIGHT_RED);
+							std::cout << "\nErro: O minimo de simbolos de comentarios e 1 e o maximo e 3" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+						}
+					}else{
+						SetConsoleTextAttribute(color, LIGHT_RED);
+						std::cout << "\nErro: A quantidade de extensoes nao pode ser zero!" << endl;
+						SetConsoleTextAttribute(color, LIGHT_WHITE);
+					}
+
+				}
+			}else{
+				if(strcmp(arg, "INIT") == 0){
+					if(init_arg){
+						bool has_param = false;
+
+						cout << endl;
+
+						if(param_dir){
+							config[arg]["dir"] = dir_str.c_str();
+							writeJSONFile("C:/gitd/configs/config.json", config);
+
+							SetConsoleTextAttribute(color, LIGHT_GREEN);
+							std::cout << "O diretorio '" << dir_str << "' da chave 'dir' foi configurado com sucesso!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							has_param = true;
+						}
+
+						if(param_ignore){
+							if(reset_ext)
+								config[arg]["ignore"].clear();
+
+							int index = config[arg]["ignore"].size();
+							config[arg]["ignore"][index] = ignore_str.c_str();
+							writeJSONFile("C:/gitd/configs/config.json", config);
+
+							SetConsoleTextAttribute(color, LIGHT_GREEN);
+							std::cout << "A extensao '" << ignore_str << "' foi adicionado na lista de ignorados!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+							has_param = true;
+						}
+
+						if(!has_param){
+							SetConsoleTextAttribute(color, LIGHT_RED);
+							std::cout << "\nO parametro inserido e invalido!" << endl;
+							SetConsoleTextAttribute(color, LIGHT_WHITE);
+						}
+
+					}else{
+						int quant_ext = 0;
+						string ext_string;
+
+						if(reset_ext)
+								config[arg]["ignore"].clear();
+
+						int next = config[arg]["ignore"].size();
+						cout << "Insira extensoes com o '.' antes e no diretorio insira './' antes de qualquer pasta, ou apenas './':" << endl;
+						cout << "\nDiretorio p/ leitura = ";
+						cin >> dir_str;
+						cout << "\nQuant. de extensoes = ";
+						cin >> quant_ext;
+
+						config[arg]["dir"] = dir_str.c_str();
+
+						int total_ext = quant_ext + next;
+						for(int i = next; i < total_ext; i++){
+							cout << "extensao " << i+1 << " = ";
+							cin >> ext_string;
+							config[arg]["ignore"][i] = ext_string.c_str();
+						}
+
+						writeJSONFile("C:/gitd/configs/config.json", config);
+
+						SetConsoleTextAttribute(color, LIGHT_GREEN);
+						std::cout << "O diretorio '" << dir_str << "' e " << quant_ext << " extensoes ignoradas foram configuradas com sucesso!" << endl;
+						SetConsoleTextAttribute(color, LIGHT_WHITE);
+
+					}
+				}
 			}
 		}
 
@@ -386,13 +599,25 @@ void searchJSONValues(char *specified){
 
 // @description Função para imprimir dados de ajuda
 void showInfoHelp(){
-	printf("\nGitDocker v0.2.5 Build 202209 \nCriado por Francis (KiddieOS Community)\n");
+	printf("\nGitDocker v0.3.0 Build 202209 \nCriado por Francis (KiddieOS Community)\n");
 	printf("Software de Documentacao e versionamento automatizado\n");
-	printf("\nusage: gitdocker [--init <arquivo>] [--show-config] [--search <extensao>] [--merge] \n\n");
+	printf("\nusage: gitdocker [--init <arquivo>] [--show-config] [--search <extensao>] [--merge] \n");
+	printf("                 [--config <opcao> [--major <numero>] [--minor <numero>] [--patch <numero>] | \n");
+	printf("                 [--dir <diretorio>] [--ignore <extensao>] | [--lang <numero>] [--reset]] \n");
+	printf("                 [--config-project] [--version] \n\n");
 	printf("--init | -i <arquivo> : Define codigo principal onde contem comandos iniciais\n");
 	printf("--show-config | -sc : Exibe informacoes das configuracoes JSON \n");
 	printf("--search | -s <extensao> : Efetua pesquisa de extensoes no JSON \n");
-	printf("--merge | -m : Realiza merge do ultimo branch que esta sendo carregado com o branch atual \n\n");
+	printf("--merge | -m : Realiza merge do ultimo branch que esta sendo carregado com o branch atual \n");
+	printf("--config | -c <opcao>: Configurar um determinado objeto JSON dado por <opcao>, \n");
+	printf("                       As opcoes possiveis sao: RULES, EXTENSIONS e INIT \n");
+	printf("--major | -ma <numero>: Definir uma versao maior maxima dada por <numero>, quando --config e RULES \n");
+	printf("--minor | -mi <numero>: Definir uma versao menor maxima dada por <numero>, quando --config e RULES\n");
+	printf("--patch | -pa <numero>: Definir uma versao de bug (patch) maxima dada por <numero>, quando --config e RULES\n");
+	printf("--lang | -l <numero>: Especificar numero de conjunto de extensoes para adicionar, quando --config e EXTENSIONS\n");
+	printf("                      Para ver o conjunto de extensoes, veja: gitdocker --show-config\n");
+	printf("--dir | -d <diretorio>: Definir um diretorio inicial para leitura do --init, quando --config e INIT \n");
+	printf("--ignore | -ig <extensao>: Acrescentar uma extensao para ser ignorada na leitura, quando --config e INIT \n\n");
 }
 
 // @description Função pra iniciar projeto
@@ -454,7 +679,7 @@ void initProjectRead(char *source){
 				}
 
 				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "@branch ";
+				std::cout << "\n@branch ";
 				SetConsoleTextAttribute(color, LIGHT_WHITE);
 				std::cout << "log: ";
 				SetConsoleTextAttribute(color, LIGHT_GREEN);
@@ -478,7 +703,7 @@ void initProjectRead(char *source){
 					fstream output;
 					output.open(cli_file, std::ios_base::app);
 
-					if(output.is_open()) output.write("\n", 1);
+					if(output.is_open()) output.write(" ", 1);
 					system(command.c_str());
 
 					system("git add *");
@@ -645,11 +870,11 @@ void branchCommand(){
 		branched = true;
 
 		SetConsoleTextAttribute(color, LIGHT_CYAN);
-		std::cout << "@branch ";
+		std::cout << "\n@branch ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 		std::cout << "log: ";
 		SetConsoleTextAttribute(color, LIGHT_GREEN);
-		std::cout << "A branch '" << branchname << "' foi criada!" << endl;
+		std::cout << "A branch '" << branchname << "' foi criada!" << endl << endl;
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 
 		system(git_checkout.c_str());
@@ -659,11 +884,11 @@ void branchCommand(){
 
 	}else{
 		SetConsoleTextAttribute(color, LIGHT_CYAN);
-		std::cout << "@branch ";
+		std::cout << "\n\n@branch ";
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 		std::cout << "log: ";
 		SetConsoleTextAttribute(color, LIGHT_GREEN);
-		std::cout << "Alternando para branch '" << branchname << "'" << endl;
+		std::cout << "Alternando para branch '" << branchname << "'" << endl << endl;
 		SetConsoleTextAttribute(color, LIGHT_WHITE);
 
 		switched = true;
@@ -682,7 +907,7 @@ void mergeExecute(){
 	string newbranch = infom["INFOS"]["merge"][1];
 
 	SetConsoleTextAttribute(color, LIGHT_CYAN);
-	std::cout << "--merge ";
+	std::cout << "\n--merge ";
 	SetConsoleTextAttribute(color, LIGHT_WHITE);
 	std::cout << "log: ";
 	SetConsoleTextAttribute(color, LIGHT_GREEN);
@@ -705,7 +930,7 @@ void mergeExecute(){
 	SetConsoleTextAttribute(color, LIGHT_WHITE);
 	std::cout << "log: ";
 	SetConsoleTextAttribute(color, LIGHT_GREEN);
-	std::cout << "Atualizando repositorio remoto para branch '" << branchname << "'..." << endl;
+	std::cout << "Atualizando repositorio remoto para branch '" << branchname << "'..." << endl << endl;
 	SetConsoleTextAttribute(color, LIGHT_WHITE);
 
 	stringstream push_conc;
@@ -740,28 +965,28 @@ void commitCommand(char *line){
 				branchname = branch_str;
 
 				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "@commit ";
+				std::cout << "\n\n@commit ";
 				SetConsoleTextAttribute(color, LIGHT_WHITE);
 				std::cout << "log: ";
 				SetConsoleTextAttribute(color, LIGHT_GREEN);
-				std::cout << "O commit '" << msgCommand << "' foi adicionado!" << endl;
+				std::cout << "O commit '" << msgCommand << "' foi adicionado!";
 				SetConsoleTextAttribute(color, LIGHT_WHITE);
 			}else{
 				SetConsoleTextAttribute(color, LIGHT_CYAN);
-				std::cout << "@commit ";
+				std::cout << "\n@commit ";
 				SetConsoleTextAttribute(color, LIGHT_WHITE);
 				std::cout << "log: ERRO => ";
 				SetConsoleTextAttribute(color, DARK_RED);
-				std::cout << "O arquivo '" << file_mod << "' nao foi modificado!" << endl;
+				std::cout << "O arquivo '" << file_mod << "' nao foi modificado!";
 				SetConsoleTextAttribute(color, LIGHT_WHITE);
 			}
 		}else{
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@commit ";
+			std::cout << "\n@commit ";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			std::cout << "log: INFO => ";
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada." << endl;
+			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada.";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 		}
 
@@ -773,19 +998,19 @@ void commitCommand(char *line){
 
 		if(exist_commit){
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@commit ";
+			std::cout << "\n@commit ";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			std::cout << "log: INFO => ";
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada." << endl;
+			std::cout << "A mensagem '" << msgCommand << "' ja foi commitada.";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 		}else{
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@commit ";
+			std::cout << "\n@commit ";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			std::cout << "log: AVISO => ";
 			SetConsoleTextAttribute(color, DARK_YELLOW);
-			std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!" << endl;
+			std::cout << "A mensagem '" << msgCommand << "' sera adicionado no proximo commit!";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			count_recursive++;
 		}
@@ -812,7 +1037,7 @@ void descriptionCommand(char *line){
 			writeJSONFile("infos/info.json", info);
 
 			SetConsoleTextAttribute(color, LIGHT_CYAN);
-			std::cout << "@description ";
+			std::cout << "\n@description ";
 			SetConsoleTextAttribute(color, LIGHT_WHITE);
 			std::cout << "log: ";
 			SetConsoleTextAttribute(color, LIGHT_GREEN);
