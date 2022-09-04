@@ -3,6 +3,10 @@
 
 Este é um projeto dedicado criar documentações automáticas durante um desenvolvimento de softwares e ao mesmo tempo realizar comandos do git para versionamento de código.
 
+### Descrição da v0.3.0
+
+Após a criação dos comandos `@branch`, `@commit` e `@description` (E operações de **git push** e **merging**), nesta versão foi implementado novos parâmetros na CLI para configuração do arquivo JSON **config.json**. É possível adicionar novas extensões referentes a leitura, diretório principal e regras de versões máxima sem precisar manipular diretamente o arquivo JSON. 
+
 ### Bug Fixes
 
 * Insere espaçamentos entre logs de comandos diferentes do GitDocker para melhor visualização.
