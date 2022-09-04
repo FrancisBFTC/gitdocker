@@ -19,8 +19,8 @@ Nesta versão foi implementado um valor específico do parâmetro --config, junt
 
 ### TODO
 
-- [ ] Implementar código do valor EXTENSIONS do parâmetro --config.
-- [ ] Implementar código do valor INIT do parâmetro --config.
+- [x] Implementar código do valor EXTENSIONS do parâmetro --config.
+- [x] Implementar código do valor INIT do parâmetro --config.
 
 ## Versões do Projeto
 
@@ -46,3 +46,5 @@ Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.5#title"> Versão 0.2.5 </a>
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.6#title"> Versão 0.2.6 </a>
 * <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.7#title"> Versão 0.2.7 </a>
+
+### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.3.0#title"> Versão 0.3.0 </a>
