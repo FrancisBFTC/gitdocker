@@ -26,3 +26,30 @@ Este é um projeto dedicado criar documentações automáticas durante um desenv
 - [ ] Criar a função verifyCreation(), para verificar arquivos untrackeds e a variável booleana **is_untracked**, assim como a função verifyModification(). Isto corrige o bug no qual se trata da situação de criação de novos arquivos ou ler o projeto pela 1ª vez e não conseguir identificar quais arquivos devem ser commitados.
 - [ ] Implementar a função do parâmetro --config-project que vai executar todos os parâmetros criados nesta versão de forma automática e vai mover por uma primeira vez a pasta **infos** e seu arquivo **info.json** para o diretório do projeto que está sendo desenvolvido.
 - [ ] Criar arquivos .bat com os parâmetros de configurações no diretório **gitd** a fim de mover estes arquivos durante a primeira configuração do projeto (--config-project) para a pasta do projeto do desenvolvedor, desta forma teriam arquivos clicáveis para efetuar configurações de forma mais rápida.
+
+## Versões do Projeto
+
+Segue abaixo uma lista de versões de desenvolvimento do GitDocker:
+
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.1#title"> Versão 0.0.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.2#title"> Versão 0.0.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.3#title"> Versão 0.0.3 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.4#title"> Versão 0.0.4 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.0.8#title"> Versão 0.0.8 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.0#title"> Versão 0.1.0 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.1#title"> Versão 0.1.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.2#title"> Versão 0.1.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.3#title"> Versão 0.1.3 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.1.4#title"> Versão 0.1.4 </a>
+
+### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.0#title"> Versão 0.2.0 </a>
+
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.1#title"> Versão 0.2.1 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.2#title"> Versão 0.2.2 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.3#title"> Versão 0.2.3 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.4#title"> Versão 0.2.4 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.5#title"> Versão 0.2.5 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.6#title"> Versão 0.2.6 </a>
+* <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.2.7#title"> Versão 0.2.7 </a>
+
+### <a href="https://github.com/FrancisBFTC/gitdocker/tree/gitdocker-v0.3.0#title"> Versão 0.3.0 </a>
